@@ -7,7 +7,7 @@ from rich.console import Console, RenderableType
 from rich.logging import RichHandler
 from rich.text import Text
 
-from s3lst_downscale.utilities.iter_utils import union
+from s3lst_ds.utilities.iter_utils import union
 
 
 class RichLogger:

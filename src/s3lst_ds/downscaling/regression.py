@@ -6,9 +6,9 @@ from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.cross_decomposition import PLSRegression
 from sklearn.dummy import DummyRegressor
 
-from s3lst_downscale.downscaling.regression_base import Regressor
-from s3lst_downscale.utilities.df_utils import get_i_non_nan
-from s3lst_downscale.utilities.metrics import (
+from s3lst_ds.downscaling.regression_base import Regressor
+from s3lst_ds.utilities.df_utils import get_i_non_nan
+from s3lst_ds.utilities.metrics import (
     mae,
     mae_delta,
     mbe,

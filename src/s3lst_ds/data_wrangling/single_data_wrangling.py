@@ -7,11 +7,11 @@ import pandas as pd
 import rioxarray as rxr  # noqa: F401
 import xarray as xr
 
-from s3lst_downscale.data_reading.s3_reader import Sen3Loader
-from s3lst_downscale.utilities.geometry_utils import load_aoi_to_gdf
-from s3lst_downscale.utilities.time_utils import get_season
-from s3lst_downscale.utilities.var_utils import DataVars
-from s3lst_downscale.utilities.xr_utils import (
+from s3lst_ds.data_reading.s3_reader import Sen3Loader
+from s3lst_ds.utilities.geometry_utils import load_aoi_to_gdf
+from s3lst_ds.utilities.time_utils import get_season
+from s3lst_ds.utilities.var_utils import DataVars
+from s3lst_ds.utilities.xr_utils import (
     selective_reproject_match,
     shape_to_raster_mask,
 )

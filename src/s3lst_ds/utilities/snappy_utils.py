@@ -2,7 +2,7 @@ import os
 from importlib import import_module
 from types import ModuleType
 
-from s3lst_downscale.utilities.logging_utils import RichLogger
+from s3lst_ds.utilities.logging_utils import RichLogger
 
 
 def import_esa_snappy(logger: RichLogger | None = None) -> ModuleType:

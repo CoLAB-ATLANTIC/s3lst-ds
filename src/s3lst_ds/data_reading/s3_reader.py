@@ -6,7 +6,7 @@ import pandas as pd
 import rioxarray as rioxr  # noqa: F401
 import xarray as xr
 
-from s3lst_downscale.utilities.exceptions_utils import FailedProdReadingError
+from s3lst_ds.utilities.exceptions_utils import FailedProdReadingError
 
 
 @dataclass

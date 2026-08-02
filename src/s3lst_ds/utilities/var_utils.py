@@ -1,6 +1,6 @@
 from typing import ClassVar, Literal
 
-from s3lst_downscale.utilities.iter_utils import difference, intersection, union
+from s3lst_ds.utilities.iter_utils import difference, intersection, union
 
 
 class DataVars:

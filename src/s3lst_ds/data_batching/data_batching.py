@@ -7,7 +7,7 @@ import pandas as pd
 import xarray as xr
 from sklearn.model_selection import BaseCrossValidator, KFold, StratifiedKFold
 
-from s3lst_downscale.data_wrangling.data_wrangling import DataWrangler
+from s3lst_ds.data_wrangling.data_wrangling import DataWrangler
 
 
 class DataBatcher:

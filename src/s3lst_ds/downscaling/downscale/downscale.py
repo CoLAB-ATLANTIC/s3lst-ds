@@ -9,14 +9,14 @@ import pandas as pd
 import xarray as xr
 from rich.table import Table
 
-from s3lst_downscale.data_wrangling.data_wrangling import DataWrangler
-from s3lst_downscale.downscaling.downscale.downscale_config import (
+from s3lst_ds.data_wrangling.data_wrangling import DataWrangler
+from s3lst_ds.downscaling.downscale.downscale_config import (
     DownscaleConfig,
     config,
 )
-from s3lst_downscale.downscaling.downscaling import Downscaler
-from s3lst_downscale.downscaling.piecewise_downscaling import PiecewiseDownscaler
-from s3lst_downscale.utilities.exceptions_utils import (
+from s3lst_ds.downscaling.downscaling import Downscaler
+from s3lst_ds.downscaling.piecewise_downscaling import PiecewiseDownscaler
+from s3lst_ds.utilities.exceptions_utils import (
     DataWranglingError,
     DownscalingError,
     ReadingError,
@@ -24,11 +24,11 @@ from s3lst_downscale.utilities.exceptions_utils import (
     TrainingError,
     WritingError,
 )
-from s3lst_downscale.utilities.logging_utils import (
+from s3lst_ds.utilities.logging_utils import (
     RichLogger,
     get_rich_text_from_renderable,
 )
-from s3lst_downscale.utilities.var_utils import DataVars
+from s3lst_ds.utilities.var_utils import DataVars
 
 # --------------------------- Downscaling function --------------------------- #
 

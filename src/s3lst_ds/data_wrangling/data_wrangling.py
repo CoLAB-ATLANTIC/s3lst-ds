@@ -7,12 +7,12 @@ import pandas as pd
 import rioxarray as rxr  # noqa: F401
 import xarray as xr
 
-from s3lst_downscale.data_wrangling.single_data_wrangling import SingleDataWrangler
-from s3lst_downscale.utilities.jobs_utils import parse_n_jobs
-from s3lst_downscale.utilities.logging_utils import RichLogger
-from s3lst_downscale.utilities.time_utils import get_season
-from s3lst_downscale.utilities.tqdm_utils import tqdm
-from s3lst_downscale.utilities.var_utils import DataVars
+from s3lst_ds.data_wrangling.single_data_wrangling import SingleDataWrangler
+from s3lst_ds.utilities.jobs_utils import parse_n_jobs
+from s3lst_ds.utilities.logging_utils import RichLogger
+from s3lst_ds.utilities.time_utils import get_season
+from s3lst_ds.utilities.tqdm_utils import tqdm
+from s3lst_ds.utilities.var_utils import DataVars
 
 
 def get_single_data_wrangler(

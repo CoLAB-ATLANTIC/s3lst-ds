@@ -1,12 +1,12 @@
-# Configuration file for the s3lst-downscale project
+# Configuration file for the s3lst-ds project
 # NOTE: to know more about the fields of the present file, check
 # https://packaging.python.org/en/latest/guides/writing-pyproject-toml/.
 
 # ---> Main project metadata
 [project]
-name = "s3lst-downscale"
+name = "s3lst-ds"
 version = "0.1.0"
-description = "A scale invariance-based downscaler model for Sentinel-3 Land Surface Temperature data."
+description = "A package for downscaling Sentinel-3 LST data using a scale-invariance-based model."
 authors = [
     { name = "Élio Pereira", email = "elio.pereira@tuta.io" },
     { name = "Manvel Khudinyan", email = "khudinyan@colabatlantic.com" },
@@ -81,7 +81,7 @@ docs = ["ipykernel>=7.3.0", "ipython>=9.16.0"]
 
 
 # ---> Additional dependency groups for usage
-# NOTE: After publishing to PyPI, command `pip install s3lst-downscale[GROUP]` can
+# NOTE: After publishing to PyPI, command `pip install s3lst-ds[GROUP]` can
 # install the dependencies in the group `GROUP` besides the runtime ones. For more
 # details, read
 # https://docs.astral.sh/uv/concepts/projects/dependencies/#multiple-sources.
@@ -94,22 +94,22 @@ snap = ["esa-snappy>=1.1.3"]
 # Command for setting CDSE credentials as environment variables
 # NOTE: After installation, command `uv run s3lst-set-cdse` may be run in the terminal
 # to set CDSE credentials. The command uses function `set_cdse` from the module
-# `s3lst_downscale.cli`.
-s3lst-downscale-set-cdse = "s3lst_downscale.cli:set_cdse"
+# `s3lst_ds.cli`.
+s3lst-ds-set-cdse = "s3lst_ds.cli:set_cdse"
 # Command for removing CDSE credentials
-s3lst-downscale-unset-cdse = "s3lst_downscale.cli:unset_cdse"
+s3lst-ds-unset-cdse = "s3lst_ds.cli:unset_cdse"
 # Command for (re)installing SNAP and configuring snappy
-s3lst-downscale-install-snap = "s3lst_downscale.cli:install_snap"
+s3lst-ds-install-snap = "s3lst_ds.cli:install_snap"
 # Command for uninstalling SNAP
-s3lst-downscale-uninstall-snap = "s3lst_downscale.cli:uninstall_snap"
+s3lst-ds-uninstall-snap = "s3lst_ds.cli:uninstall_snap"
 
 # ---> URLs associated with the project
 # NOTE: Check https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#urls
 # to know more about the URLs field.
 [project.urls]
-Homepage = "https://github.com/CoLAB-ATLANTIC/s3lst-downscale"
-Repository = "https://github.com/CoLAB-ATLANTIC/s3lst-downscale"
-Issues = "https://github.com/CoLAB-ATLANTIC/s3lst-downscale/issues"
+Homepage = "https://github.com/CoLAB-ATLANTIC/s3lst-ds"
+Repository = "https://github.com/CoLAB-ATLANTIC/s3lst-ds"
+Issues = "https://github.com/CoLAB-ATLANTIC/s3lst-ds/issues"
 
 
 # ---> Build backend tool
@@ -127,4 +127,4 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 # Location of the source code of the package to be used by the Hatchling build backend
 # NOTE: https://github.com/pypa/hatch/blob/master/docs/config/build.md#packages
-packages = ["src/s3lst_downscale"]
+packages = ["src/s3lst_ds"]

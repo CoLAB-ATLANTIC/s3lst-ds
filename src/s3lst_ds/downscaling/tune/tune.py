@@ -12,15 +12,15 @@ from rich.table import Table
 from sklearn.model_selection import GridSearchCV
 from sklearn.neural_network import MLPRegressor
 
-from s3lst_downscale.data_batching.data_batching import DataBatcher
-from s3lst_downscale.data_wrangling.data_wrangling import DataWrangler
-from s3lst_downscale.downscaling.downscaling import Downscaler
-from s3lst_downscale.downscaling.estimation import DownscalerEstimator
-from s3lst_downscale.downscaling.tune.tune_config import (
+from s3lst_ds.data_batching.data_batching import DataBatcher
+from s3lst_ds.data_wrangling.data_wrangling import DataWrangler
+from s3lst_ds.downscaling.downscaling import Downscaler
+from s3lst_ds.downscaling.estimation import DownscalerEstimator
+from s3lst_ds.downscaling.tune.tune_config import (
     TuneConfig,
     config,
 )
-from s3lst_downscale.utilities.exceptions_utils import (
+from s3lst_ds.utilities.exceptions_utils import (
     DataBatchingError,
     DataWranglingError,
     ReadingError,
@@ -29,13 +29,13 @@ from s3lst_downscale.utilities.exceptions_utils import (
     TuningError,
     WritingError,
 )
-from s3lst_downscale.utilities.logging_utils import (
+from s3lst_ds.utilities.logging_utils import (
     RichLogger,
     get_rich_text_from_renderable,
 )
-from s3lst_downscale.utilities.metrics import get_scorer
-from s3lst_downscale.utilities.tqdm_utils import tqdm
-from s3lst_downscale.utilities.var_utils import DataVars
+from s3lst_ds.utilities.metrics import get_scorer
+from s3lst_ds.utilities.tqdm_utils import tqdm
+from s3lst_ds.utilities.var_utils import DataVars
 
 # ----- Function for training downscaler with the whole cross-validation ----- #
 

@@ -7,7 +7,7 @@ from pathlib import Path
 
 from rich.prompt import Prompt
 
-from s3lst_downscale.utilities.logging_utils import RichLogger
+from s3lst_ds.utilities.logging_utils import RichLogger
 
 
 def set_cdse() -> None:
@@ -21,7 +21,7 @@ def set_cdse() -> None:
 
     # ---> Create logger
     logger = RichLogger(
-        name="s3lst_downscale.cli.set_cdse",
+        name="s3lst_ds.cli.set_cdse",
         level=logging.INFO,
         log_mode="console",
     )
@@ -83,7 +83,7 @@ def unset_cdse() -> None:
 
     # ---> Create logger
     logger = RichLogger(
-        name="s3lst_downscale.cli.unset_cdse",
+        name="s3lst_ds.cli.unset_cdse",
         level=logging.INFO,
         log_mode="console",
     )
@@ -108,7 +108,7 @@ def install_snap() -> None:
     script `scripts/install/install_snap.sh`.
     """
     # Path to latex installation script
-    script = files("s3lst_downscale").joinpath("scripts/install/install_snap.sh")
+    script = files("s3lst_ds").joinpath("scripts/install/install_snap.sh")
     # Run script
     subprocess.run(
         # Command arguments
@@ -124,7 +124,7 @@ def uninstall_snap() -> None:
     `scripts/install/uninstall_snap.sh`.
     """
     # Path to SNAP uninstallation script
-    script = files("s3lst_downscale").joinpath("scripts/install/uninstall_snap.sh")
+    script = files("s3lst_ds").joinpath("scripts/install/uninstall_snap.sh")
     # Run script
     subprocess.run(
         # Command arguments

@@ -1,84 +1,135 @@
-LST_downscaling | Land Surface Temperature Downscaling
-=============================
-Algorithm to downscale Sentinel-3 LST data from 1 km to 300m.
+# **s3lst-ds**: a package for downscaling Sentinel-3 LST data using a scale-invariance-based model
 
-## LST downscaling package includes:
-- Image search and downloading by AOI
-- Sentinel-3 product reading and transforming
-- Statistical and ML downscaling model pipelines
-- Model accuracy assesment pipeline
+<!-- Badges from [Shields.io](https://shields.io/badges) -->
+
+<!-- ----------------------------- PyPI badges ----------------------------- -->
+<!-- NOTE: the values of all PyPI badges are inferred from the PyPI website dedicated
+to the project. All PyPI-related badges may be found
+[here](https://shields.io/search/?q=pypi)-->
+<!-- Packge version: https://shields.io/badges/py-pi-version -->
+<!-- Pakage python version: https://shields.io/badges/py-pi-python-version -->
+<!-- Package license: https://shields.io/badges/py-pi-license -->
+<!-- Package implementation: https://shields.io/badges/py-pi-implementation -->
+<!-- Package indicator for availability of wheel distribution : https://shields.io/badges/py-pi-wheel -->
+<!-- Package development status: https://shields.io/badges/py-pi-status -->
+
+<!-- ---------------------------- GitHub badges ---------------------------- -->
+<!-- NOTE: the values of all GitHub badges are inferred from the GitHub repo of the
+project. All GitHub-related badges may be found
+[here](https://shields.io/search/?q=github)-->
+
+<!-- GitHub time of last commit: https://shields.io/badges/git-hub-last-commit -->
+
+<!-- ---------------------------- Other badges ----------------------------- -->
+<!-- uv package and project manager usage: https://github.com/astral-sh/uv/pull/15075#issue-3291641128 -->
+<!-- Ruff linter and formatter usage: https://github.com/astral-sh/ruff/blob/main/README.md?plain=1 -->
+<!-- Hatch build backend usage: https://hatch.pypa.io/dev/next-steps/#community -->
+![PyPI Version](https://img.shields.io/pypi/v/s3lst-ds)
+![PyPI Python Version](https://img.shields.io/pypi/pyversions/s3lst-ds)
+![PyPI License](https://img.shields.io/pypi/l/s3lst-ds)
+![PyPI Implementation](https://img.shields.io/pypi/implementation/s3lst-ds)
+![PyPI Wheel](https://img.shields.io/pypi/wheel/s3lst-ds)
+![PyPI Status](https://img.shields.io/pypi/status/s3lst-ds)
+![GitHub last commit](https://img.shields.io/github/last-commit/eliocp/s3lst-ds)
+[![uv](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FOnyx-Nostalgia%2Fuv%2Frefs%2Fheads%2Ffix%2Flogo-badge%2Fassets%2Fbadge%2Fv0.json)](https://github.com/astral-sh/uv)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Hatch project](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pypa/hatch/master/docs/assets/badge/v0.json)](https://github.com/pypa/hatch)
+
+[s3lst-ds](https://github.com/CoLAB-ATLANTIC/s3lst-ds) provides pipelines for
+conveniently querying, downloading, filtering and downscaling [Sentinel-3
+LST](https://sentiwiki.copernicus.eu/web/slstr-products#L2-LST-Products) data using
+either single or multi-timestamp scale-invariance-based models.
 
 
-## Installation
+## (*Base*) Installation
 
-1. Clone the [GitHub repository](https://github.com/CoLAB-ATLANTIC/LST_downscaling) to
-   local directory `lst_downscaling` and change to it:
+* Install the latest stable release from [PyPI](https://pypi.org/project/s3lst-ds/) in
+the activated virtual environment using [`pip`](https://pypi.org/project/pip/) command:
 
     ```bash
-    git clone https://github.com/CoLAB-ATLANTIC/s3lst_downscale.git lst_downscaling
-    cd lst_downscaling
+    pip install s3lst-ds
     ```
-
-2. Run script `scripts/install/install.sh` in the current shell:
+    or [`uv`](https://docs.astral.sh/uv/):
 
     ```bash
-    source scripts/install/install.sh
+    uv add s3lst-ds
     ```
+
+### Set CDSE credentials
+
+[CDSE](https://dataspace.copernicus.eu/) credentials are required to download the
+Sentinel-3 data and must be safely set as environment variables in the system. This may
+be done through an appropriate script, either using the respective executable:
+
+```bash
+VENV/bin/s3lst-ds-set-cdse
+```
+
+(where `VENV` is the path to the installation directory of the virtual environment (e.g.
+`.venv`)), or, more conveniently, using `uv`:
+
+```bash
+uv run s3lst-ds-set-cdse
+```
 
 > [!NOTE]
-> #### About script `scripts/install/install.sh`
-> Script `scripts/install/install.sh` performs a clean installation of the project,
-> uninstalling previous dependencies. It creates the [uv](https://docs.astral.sh/uv/)
-> virtual environment `lst-downscaling` in folder `.venv` at the root directory and
-> installs the dependencies defined in file [`pyproject.toml`](pyproject.toml) as well
-> as the project files in editable state. The resultant package of project files is
-> named `lst_downscaling`. By installing them, any project file may then be able to
-> import objects from any other through the paths of these latter with respect to the
-> project main directory.
+> The credentials will be written to file `~/.config/cdse_credentials.sh` with read and
+> write permissions solely issued to the user.
 >
-> The script also sets [CDSE](https://dataspace.copernicus.eu/) credentials (stated in
-> [`scripts/config.sh`](scripts/config.sh)) in the `~/.bashrc` file, removing old ones
-> (to be able to download the Sentinel-3 data).
->
-> #### About esa-snappy
->
-> [esa-snappy](https://github.com/senbox-org/esa-snappy) Python package, together with
-> its Java backend [SNAP](https://step.esa.int/main/download/snap-download/) may be used
-> in place of virtual environment's
-> [`rioxarray`](https://corteva.github.io/rioxarray/html/rioxarray.html) package to more
-> accurately georeference the Sentinel-3 products. To install and configure SNAP and
-> `esa-snappy` (and with the version stated in [`scripts/config.sh`](scripts/config.sh)), use
-> flag `--install-snap` in the above-mentioned installation command,
-> that is,
->
+> Note that if the user would like to remove the credentials at a later time, an appropriate script could be run through the respective excutable:
 > ```bash
-> source scripts/install/install.sh --install-snap
+> VENV/bin/s3lst-ds-unset-cdse
 > ```
-> 
-> or, if the installation command was already run without the `--install-snap` flag, use
-> the dedicated installation script `scripts/install/install_snap.sh` after, that is,
+> or, using `uv`:
 > 
 > ```bash
-> source scripts/install/install_snap.sh
+> uv run s3lst-ds-unset-cdse
 > ```
-> 
-> Note that the Python version of `uv` virtual environment is relevant to `esa-snappy`:
-> [this package might not be supported by the latest Python
-> versions](https://senbox.atlassian.net/wiki/spaces/SNAP/pages/3114106881/Installation+and+configuration+of+the+SNAP-Python+esa_snappy+interface+SNAP+version+12).
->
-> Furthermore, note that when importing `esa_snappy` package in Python a lot of errors
-> and warnings may be printed. Still, [according to ESA's SNAP developers, these may be
-> safely ignored](https://forum.step.esa.int/t/snap-gpt-warning/43343/4).
->
-> Lastly, it is important to take into mind that `esa-snappy` uses Java in the
-> background and limits the memory consumed by it. To increase Java's maximum heap
-> memory to for instance 64 GB, one would need to open file `esa_snappy.ini` in the
-> directory associated with `uv` virtual environment's `esa_snappy` package by doing 
+
+## (*Optional*) Snappy Installation
+
+The base installation considers
+[`rioxarray`](https://corteva.github.io/rioxarray/stable/) for georeferencing the
+Sentinel-3 products. However, [`snappy`](https://github.com/senbox-org/esa-snappy) has
+been found to produce better results, and, because of that, it is herein availed as an
+optional tool. The installation of this extra dependency requires two steps, in the
+following order:
+
+
+1. Installation of the `snappy` Python package using `pip`:
+
+    ```bash
+    pip install s3lst-ds[snap]
+    ```
+
+    or `uv`:
+
+    ```bash
+    uv add s3lst-ds[snap]
+    ```
+
+2. Installation of the backend [`SNAP`](https://earth.esa.int/eogateway/tools/snap) Java
+   package and subsequent configuration using the respective executable:
+
+    ```bash
+    VENV/bin/s3lst-ds-install-snap
+    ```
+
+    or, more conveniently, using `uv`:
+
+    ```bash
+    uv run s3lst-ds-install-snap
+    ```
+
+> [!WARNING]
+> It is important to note that SNAP is configured with a limited amount of memory. To
+> increase SNAP's maximum heap memory to for instance 64 GB, one would need to open file
+> `esa_snappy.ini` nested in the installation directory of the virtual environment
+> (herein assumed to be `VENV`) by doing 
 >
 > ```bash
-> nano .venv/lib/python3.12/site-packages/esa_snappy/esa_snappy.ini
+> nano VENV/lib/python3.12/site-packages/esa_snappy/esa_snappy.ini
 > ```
->
 > and writing in it:
 >
 > ```ini
@@ -86,21 +137,68 @@ Algorithm to downscale Sentinel-3 LST data from 1 km to 300m.
 > java_max_mem: 64G
 > ```
 
-## Reinstall dependencies
+> [!NOTE]
+> If the user would to like to uninstall `SNAP` at a later time, an appropriate script
+> may be used, either through the respective executable:
+>
+> ```bash
+> VENV/bin/s3lst-ds-uninstall-snap
+> ```
+> or, more conveniently, using `uv`:
+> 
+> ```bash
+> uv run s3lst-ds-uninstall-snap
+> ```
 
-Recreate the uv virtual environment `lst-downscaling` and reinstall dependencies through
-the same script that was used in the installation:
+## Documentation
 
-```bash
-source scripts/install/install.sh
-```
+To be built.
 
-To (re)install SNAP, use the `--install-snap` flag.
+## Development
 
-## Reconfigure
+### Installation of development dependencies
 
-File [`scripts/config.sh`](scripts/config.sh) contains variables describing SNAP version
-(`SNAP_VERSION`), and [CDSE](https://dataspace.copernicus.eu/) credentials (to be able
-to download the Sentinel-3 data) (`CDSE_USER` and `CDSE_PASS`). The user may freely
-change these. Note, however, to make the changes have an impact, one must [reinstall the
-dependencies](#reinstall-dependencies).
+* Create the development environment using all dependency groups:
+
+    ```bash
+    uv sync --all-groups
+    ```
+
+### Linting
+
+* Use [`ruff`](https://docs.astral.sh/ruff/linter/) for Python linting:
+
+    ```bash
+    uv run ruff check --fix --diff
+    ```
+    The command above will check for bugs, suspicious code, style violations, dead code,
+    complexity issues and import problems. It will further proposed fixes.
+
+* Apply the fixes:
+
+    ```bash
+    uv run ruff check --fix
+    ```
+
+### Formatting
+
+* Use [`ruff`](https://docs.astral.sh/ruff/formatter/) for Python formatting:
+
+    ```bash
+    uv run ruff format --diff
+    ```
+
+    The command above will check the code structure, namely, the indentation, spaces,
+    line breaks, quote style and long line wrapping. It will further show the proposed
+    changes.
+
+* Apply the changes:
+
+    ```bash
+    uv run ruff format
+    ```
+
+## License
+
+Pingi is licensed under the terms of the [MIT
+license](https://github.com/eliocp/pingi/blob/main/LICENSE). 

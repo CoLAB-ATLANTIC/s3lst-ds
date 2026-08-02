@@ -6,7 +6,7 @@ import xarray as xr
 from rasterio.features import rasterize
 from rasterio.warp import Resampling
 
-from s3lst_downscale.utilities.var_utils import DataVars
+from s3lst_ds.utilities.var_utils import DataVars
 
 
 class ReprojectDefaultParams:

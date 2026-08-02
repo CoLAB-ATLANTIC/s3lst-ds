@@ -4,10 +4,10 @@ from typing import Literal
 
 from sklearn.linear_model import LinearRegression
 
-from s3lst_downscale.data_wrangling.data_wrangling import DataWrangler
-from s3lst_downscale.downscaling.downscaling import Downscaler
-from s3lst_downscale.downscaling.piecewise_downscaling import PiecewiseDownscaler
-from s3lst_downscale.downscaling.regression import Regressor
+from s3lst_ds.data_wrangling.data_wrangling import DataWrangler
+from s3lst_ds.downscaling.downscaling import Downscaler
+from s3lst_ds.downscaling.piecewise_downscaling import PiecewiseDownscaler
+from s3lst_ds.downscaling.regression import Regressor
 
 
 @dataclass
@@ -75,7 +75,7 @@ class DownscaleConfig:
         aliases of the predictors (`cols_X`) considered by the latter. Otherwise, if
         `downscaler` is not issued but `downscaler_X` is, it will be set to
         `downscaler_X`, or, if not, to all aliases of the predictors (`X`) considered by
-        a default `DataVars` instance (`s3lst_downscale.utilities.var_utils.DataVars`).
+        a default `DataVars` instance (`s3lst_ds.utilities.var_utils.DataVars`).
 
     data_wrangler_max_workers : int, default=1
         Number of simultaneous multiple processes to be considered by the data wrangler
@@ -295,34 +295,34 @@ class DownscaleConfig:
 # Configurations for downscaling
 config = DownscaleConfig(
     # data_wrangler=Path(
-    #     "/home/elio/projects/lst_downscaling/assets/results/donwscale_trial_2/data_wrangler.joblib"
+    #     Path(__file__).resolve().parents[4] / "assets/data/results/donwscale_trial/data_wrangler.joblib"
     # ),
     data_wrangler_path_sentinel3=Path(
-        "/home/elio/projects/lst_downscaling/assets/data/processed/sentinel3"
+        Path(__file__).resolve().parents[4] / "assets/data/raw/sentinel3_trial"
     ),
-    data_wrangler_path_spatial_pred=Path(
-        "/home/elio/projects/lst_downscaling/assets/data/processed/fixed_predictors.nc"
-    ),
-    # data_wrangler_aoi="POLYGON ((10 55, 11 55, 11 56, 10 56, 10 55))",
-    data_wrangler_aoi="/home/elio/projects/lst_downscaling/assets/aoi/clim4cities.shp",
-    data_wrangler_path_landsat=Path(
-        "/home/elio/projects/lst_downscaling/assets/data/processed/landsat"
-    ),
+    # data_wrangler_path_spatial_pred=Path(
+    #     Path(__file__).resolve().parents[4]
+    #     / "assets/data/raw/fixed_predictors.nc"
+    # ),
+    data_wrangler_aoi="POLYGON ((10 55, 11 55, 11 56, 10 56, 10 55))",
+    # data_wrangler_path_landsat=Path(
+    #     Path(__file__).resolve().parents[4] / "assets/data/raw/landsat"
+    # ),
     data_wrangler_vars=[
         "FVC",
         "NDWI",
-        "TCD",
-        "COASTDIST",
-        "IMD",
+        # "TCD",
+        # "COASTDIST",
+        # "IMD",
         # "season",
         # "LCZ",
         # "UD",
     ],
     # WARNING: data_wrangler_max_workers takes effect regardless of the downscaler being
     # issued or created from scratch.
-    data_wrangler_max_workers=10,
+    data_wrangler_max_workers=5,
     # downscaler=Path(
-    #     "/home/elio/projects/lst_downscaling/assets/results/donwscale_trial_2/downscaler.joblib"
+    #     Path(__file__).resolve().parents[4] / "assets/results/donwscale_trial/downscaler.joblib"
     # ),
     # downscaler=Downscaler(
     #     base_model=LinearRegression(),
@@ -330,13 +330,19 @@ config = DownscaleConfig(
     #     cols_mask=["aoi"],
     #     scale="standardize",
     #     encode="dummy",
-    #     max_workers=10,
+    #     max_workers=5,
     #     transform="standardize",  # type: ignore
     # ),
     downscaler_architecture="single",
     # downscaler_base_model=DummyRegressor(),
     downscaler_base_model=LinearRegression(),
-    downscaler_X=["FVC", "NDWI", "COASTDIST", "IMD", "TCD"],
+    downscaler_X=[
+        "FVC",
+        "NDWI",
+        # "COASTDIST",
+        # "IMD",
+        # "TCD",
+    ],
     # WARNING: downscaler_masks takes effect regardless of the downscaler being issued
     # or created from scratch.
     downscaler_masks=["aoi"],
@@ -345,7 +351,7 @@ config = DownscaleConfig(
     downscaler_transform="standardize",
     # WARNING: downscaler_max_workers takes effect regardless of the downscaler being
     # issued or created from scratch.
-    downscaler_max_workers=10,
+    downscaler_max_workers=5,
     # timestamps_infer=[
     #     "2020-05-30 10:17:38",
     #     "2020-06-15 10:02:39",
@@ -369,7 +375,7 @@ config = DownscaleConfig(
     gridded=True,
     dims=None,
     attrs=None,
-    path_out=Path("/home/elio/projects/lst_downscaling/assets/results/downscale_trial"),
+    path_out=Path(__file__).resolve().parents[4] / "assets/results/downscale_trial",
     file_ext_grid=".nc",
     out_data_wrangler=True,
     out_downscaler=True,

@@ -5,8 +5,8 @@ import pandas as pd
 from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.pipeline import Pipeline
 
-from s3lst_downscale.downscaling.preprocessing import DownscalerPreprocessor
-from s3lst_downscale.downscaling.regression import DownscalerRegressor, Regressor
+from s3lst_ds.downscaling.preprocessing import DownscalerPreprocessor
+from s3lst_ds.downscaling.regression import DownscalerRegressor, Regressor
 
 
 class DownscalerEstimator(BaseEstimator, RegressorMixin):

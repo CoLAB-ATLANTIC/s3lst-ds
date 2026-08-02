@@ -9,15 +9,15 @@ import requests
 from shapely import wkt
 from shapely.errors import ShapelyError
 
-from s3lst_downscale.utilities.exceptions_utils import (
+from s3lst_ds.utilities.exceptions_utils import (
     AccessTokenGenerationError,
     AccessTokenRefreshError,
     GeometryError,
     JSONDecodeError,
     WritingError,
 )
-from s3lst_downscale.utilities.logging_utils import RichLogger
-from s3lst_downscale.utilities.tqdm_utils import tqdm
+from s3lst_ds.utilities.logging_utils import RichLogger
+from s3lst_ds.utilities.tqdm_utils import tqdm
 
 
 # ----------------------- Getter of CDSE's access token ---------------------- #

@@ -8,9 +8,9 @@ import optuna
 from sklearn.linear_model import LinearRegression
 from sklearn.neural_network import MLPRegressor
 
-from s3lst_downscale.data_batching.data_batching import DataBatcher
-from s3lst_downscale.downscaling.downscaling import Downscaler
-from s3lst_downscale.downscaling.regression import Regressor
+from s3lst_ds.data_batching.data_batching import DataBatcher
+from s3lst_ds.downscaling.downscaling import Downscaler
+from s3lst_ds.downscaling.regression import Regressor
 
 
 def params_tune_getter(
@@ -191,7 +191,7 @@ class TuneConfig:
         predictors (`cols_X`) considered by the latter. Otherwise, if `downscaler` is
         not issued but `downscaler_X` is, it will be set to `downscaler_X`, or, if not,
         to all aliases of the predictors (`X`) considered by a default `DataVars`
-        instance (`s3lst_downscale.utilities.var_utils.DataVars`).
+        instance (`s3lst_ds.utilities.var_utils.DataVars`).
 
     data_batcher_data_wrangler_max_workers : int, default=1
         Number of simultaneous multiple processes to be considered by the data wrangler
@@ -411,18 +411,19 @@ class TuneConfig:
 # Configurations for tuning
 config = TuneConfig(
     # data_batcher=Path(
-    #     "/home/elio/projects/lst_downscaling/assets/results/tune_trial/data_batcher.joblib"
+    #     Path(__file__).resolve().parents[4]
+    #     / "assets/results/tune_trial/data_batcher.joblib"
     # ),
-    data_batcher_data_wrangler_path_sentinel3=Path(
-        "/home/elio/projects/lst_downscaling/assets/data/processed/sentinel3"
+    data_batcher_data_wrangler_path_sentinel3=(
+        Path(__file__).resolve().parents[4] / "assets/data/processed/sentinel3"
     ),
-    data_batcher_data_wrangler_path_spatial_pred=Path(
-        "/home/elio/projects/lst_downscaling/assets/data/processed/fixed_predictors.nc"
+    data_batcher_data_wrangler_path_spatial_pred=(
+        Path(__file__).resolve().parents[4]
+        / "assets/data/processed/fixed_predictors.nc"
     ),
-    # data_batcher_data_wrangler_aoi="POLYGON ((10 55, 11 55, 11 56, 10 56, 10 55))",
-    data_batcher_data_wrangler_aoi="/home/elio/projects/lst_downscaling/assets/aoi/clim4cities.shp",
-    data_batcher_data_wrangler_path_landsat=Path(
-        "/home/elio/projects/lst_downscaling/assets/data/processed/landsat"
+    data_batcher_data_wrangler_aoi="POLYGON ((10 55, 11 55, 11 56, 10 56, 10 55))",
+    data_batcher_data_wrangler_path_landsat=(
+        Path(__file__).resolve().parents[4] / "assets/data/processed/landsat"
     ),
     data_batcher_data_wrangler_vars=[
         "FVC",
@@ -436,12 +437,13 @@ config = TuneConfig(
     ],
     # WARNING: data_wrangler_max_workers takes effect regardless of the downscaler being
     # issued or created from scratch.
-    data_batcher_data_wrangler_max_workers=10,
+    data_batcher_data_wrangler_max_workers=5,
     data_batcher_n_cross_val_folds=5,
     data_batcher_var_cross_val_strat="season",
     data_batcher_rnd_seed=42,
-    # downscaler=Path(
-    #     "/home/elio/projects/lst_downscaling/assets/results/tune_trial/downscaler.joblib"
+    # downscaler=(
+    #     Path(__file__).resolve().parents[4]
+    #     / "assets/results/tune_trial/downscaler.joblib"
     # ),
     # downscaler=Downscaler(
     #     base_model=MLPRegressor(
@@ -464,7 +466,7 @@ config = TuneConfig(
     #     cols_mask=["aoi"],
     #     scale="standardize",
     #     encode="dummy",
-    #     max_workers=10,
+    #     max_workers=5,
     #     transform="standardize",  # type: ignore
     # ),
     downscaler_base_model=MLPRegressor(
@@ -492,17 +494,17 @@ config = TuneConfig(
     downscaler_transform="standardize",
     # WARNING: downscaler_max_workers takes effect regardless of the downscaler being
     # issued or created from scratch.
-    downscaler_max_workers=10,
-    sample_weight_fit="IMD",
-    sample_weight_score="IMD",
+    downscaler_max_workers=5,
+    # sample_weight_fit="IMD",
+    # sample_weight_score="IMD",
     scorers=["r2", "rmse", "rmse_delta", "mae", "mae_delta", "mbe"],
     best_scorer="rmse",
     correct=True,
     params_tune_getter=params_tune_getter,
     tune_rnd_seed=42,
-    tune_n_trials=1,
+    tune_n_trials=2,
     tune_n_jobs=10,
-    path_out=Path("/home/elio/projects/lst_downscaling/assets/results/tune_trial"),
+    path_out=Path(__file__).resolve().parents[4] / "assets/results/tune_trial",
     out_data_batcher=True,
     log_mode="both",
 )

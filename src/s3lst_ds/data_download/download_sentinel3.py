@@ -22,18 +22,18 @@ from rasterio.warp import Resampling
 
 # Import configurations for querying, downloading and filtering Sentinel-3 LST and SYN
 # products
-from s3lst_downscale.data_download.download_sentinel3_config import (
+from s3lst_ds.data_download.download_sentinel3_config import (
     Sentinel3Config,
     config,
 )
 
 # Import querying and downloading utilities associated with CDSE's OData API
-from s3lst_downscale.utilities.cdse_utils import (
+from s3lst_ds.utilities.cdse_utils import (
     CDSEAuthState,
     download_cdse,
     query_cdse,
 )
-from s3lst_downscale.utilities.exceptions_utils import (
+from s3lst_ds.utilities.exceptions_utils import (
     CleanupError,
     CloudCoverComputationError,
     CloudCoverLimitError,
@@ -49,15 +49,15 @@ from s3lst_downscale.utilities.exceptions_utils import (
 )
 
 # Import geometry utilities
-from s3lst_downscale.utilities.geometry_utils import (
+from s3lst_ds.utilities.geometry_utils import (
     footprint_aoi_overlap,
     load_aoi_to_gdf,
     to_convex_hull_wkt,
 )
-from s3lst_downscale.utilities.jobs_utils import parse_n_jobs
-from s3lst_downscale.utilities.logging_utils import RichLogger
-from s3lst_downscale.utilities.snappy_utils import import_esa_snappy
-from s3lst_downscale.utilities.warnings_utils import suppress_warnings
+from s3lst_ds.utilities.jobs_utils import parse_n_jobs
+from s3lst_ds.utilities.logging_utils import RichLogger
+from s3lst_ds.utilities.snappy_utils import import_esa_snappy
+from s3lst_ds.utilities.warnings_utils import suppress_warnings
 
 # ---> Configure environment
 
@@ -703,7 +703,7 @@ class ProdInfo:
         - for the case of Sentinel-3B: `orbit = cycle * 385 + relative_orbit - 4348`
 
         For more details, check this post in ESA's step forum
-        (https://forum.step.esa.int/t/how-to-calculate-sentinel-3-absolute-orbit-number-from-filename/27507/2?u=eliocpereira)
+        (https://forum.step.esa.int/t/how-to-calculate-sentinel-3-absolute-orbit-number-from-filename/27507/2)
 
     start_sensing_time: str
         Start sensing datetime. The parameter may be obtained from the respective
