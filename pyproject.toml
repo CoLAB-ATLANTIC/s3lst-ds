@@ -1,0 +1,130 @@
+# Configuration file for the s3lst-downscale project
+# NOTE: to know more about the fields of the present file, check
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/.
+
+# ---> Main project metadata
+[project]
+name = "s3lst-downscale"
+version = "0.1.0"
+description = "A scale invariance-based downscaler model for Sentinel-3 Land Surface Temperature data."
+authors = [
+    { name = "Élio Pereira", email = "elio.pereira@tuta.io" },
+    { name = "Manvel Khudinyan", email = "khudinyan@colabatlantic.com" },
+]
+
+# Keywords (to improve discoverability and the dependencies that are required to install
+# the package)
+keywords = [
+    "Sentinel-3",
+    "Landsat 8-9",
+    "Land Surface Temperature",
+    "Downscaling",
+    "Scale Invariance",
+    "Data Science",
+    "Machine Learning",
+    "Remote Sensing",
+]
+
+
+readme = "README.md"
+# Licenses' identifiers
+# NOTE: Check
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license to know
+# more about the license field.
+# NOTE: Check https://spdx.org/licenses/ for a list of valid identifiers.
+# NOTE: MIT license: https://spdx.org/licenses/MIT.html
+license = "MIT"
+# Glob paths to the license files
+# NOTE: Check
+# https://packaging.python.org/en/latest/tutorials/packaging-projects/#creating-a-license
+# to how to create a license file.
+# NOTE: MIT license file: https://choosealicense.com/licenses/mit/
+# WARNING: [year] and [fullname] entries in the file  must be replaced.
+license-files = ["LICEN[CS]E*"]
+
+# PyPI classifiers
+# NOTE: Check https://pypi.org/classifiers/ for a list of valid classifiers.
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: Unix",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: GIS",
+    "License :: OSI Approved :: MIT License",
+]
+
+# Minimum version of Python that is supported
+requires-python = ">=3.13"
+
+
+# Runtime dependencies (the main dependencies that are required to run the package)
+dependencies = [
+    "geopandas>=1.1.4",
+    "netcdf4>=1.7.4",
+    "optuna>=4.9.0",
+    "requests>=2.34.2",
+    "rich>=15.0.0",
+    "rioxarray>=0.23.0",
+    "scikit-learn>=1.9.0",
+    "tqdm>=4.70.0",
+]
+
+
+# ---> Additional dependency groups for development
+# NOTE: Command `uv sync --group GROUP` will install the dependencies in the group
+# `GROUP` besides the runtime ones.
+[dependency-groups]
+dev = ["ruff>=0.16.1"]
+docs = ["ipykernel>=7.3.0", "ipython>=9.16.0"]
+
+
+# ---> Additional dependency groups for usage
+# NOTE: After publishing to PyPI, command `pip install s3lst-downscale[GROUP]` can
+# install the dependencies in the group `GROUP` besides the runtime ones. For more
+# details, read
+# https://docs.astral.sh/uv/concepts/projects/dependencies/#multiple-sources.
+[project.optional-dependencies]
+# Python wrapper for SNAP
+snap = ["esa-snappy>=1.1.3"]
+
+# ---> Scripts that can be run from the command line after installing the package
+[project.scripts]
+# Command for setting CDSE credentials as environment variables
+# NOTE: After installation, command `uv run s3lst-set-cdse` may be run in the terminal
+# to set CDSE credentials. The command uses function `set_cdse` from the module
+# `s3lst_downscale.cli`.
+s3lst-downscale-set-cdse = "s3lst_downscale.cli:set_cdse"
+# Command for removing CDSE credentials
+s3lst-downscale-unset-cdse = "s3lst_downscale.cli:unset_cdse"
+# Command for (re)installing SNAP and configuring snappy
+s3lst-downscale-install-snap = "s3lst_downscale.cli:install_snap"
+# Command for uninstalling SNAP
+s3lst-downscale-uninstall-snap = "s3lst_downscale.cli:uninstall_snap"
+
+# ---> URLs associated with the project
+# NOTE: Check https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#urls
+# to know more about the URLs field.
+[project.urls]
+Homepage = "https://github.com/CoLAB-ATLANTIC/s3lst-downscale"
+Repository = "https://github.com/CoLAB-ATLANTIC/s3lst-downscale"
+Issues = "https://github.com/CoLAB-ATLANTIC/s3lst-downscale/issues"
+
+
+# ---> Build backend tool
+# NOTE: The build backend tool is responsible for creating the distribution package
+# (check
+# https://packaging.python.org/en/latest/tutorials/packaging-projects/#choosing-a-build-backend
+# for more details).
+# NOTE: Hatchling tool has many benefits compared to the ubiquitous setuptools (check
+# https://hatch.pypa.io/1.8/why/)
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
+
+[tool.hatch.build.targets.wheel]
+# Location of the source code of the package to be used by the Hatchling build backend
+# NOTE: https://github.com/pypa/hatch/blob/master/docs/config/build.md#packages
+packages = ["src/s3lst_downscale"]

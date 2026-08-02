@@ -1,0 +1,24 @@
+
+"code","label","description","color","index"
+"100100","1","Compact high-rise","#dc0f0f",0
+"100200","2","Compact midrise","#eb3f1d",1
+"100300","3","Compact low-rise","#ea811f",2
+"100123","123","Compact mix-rise","#ef5a0a",3
+"100400","4","Open high-rise","#edb141",4
+"100500","5","Open midrise","#e6d367",5
+"100600","6","Open low-rise","#ffec3f",6
+"100456","456","Open mix-rise","#e0bb5b",7
+"100800","8","Large low-rise","#bcbcbc",8
+"100900","9","Sparsely built","#efd7e5",9
+"101000","10","Heavy industry","#000000",10
+"110100","A","Dense trees","#26791a",11
+"110110","A coniferous","Dense trees coniferous","#26791a",12
+"110120","A deciduous","Dense trees deciduous","#26791a",13
+"110200","B","Scattered trees","#2ba303",14
+"110210","B coniferous","Scattered trees coniferous","#2ba303",15
+"110220","B deciduous","Scattered trees deciduous","#2ba303",16
+"110300","C","Bush scrub","#6fd007",17
+"110400","D","Low plants","#86e276",18
+"110500","E","Bare rock or paved","#a2a2a2",19
+"110600","F","Bare soil or sand","#e7d6ae",20
+"110700","G","Water","#5898cf",21
