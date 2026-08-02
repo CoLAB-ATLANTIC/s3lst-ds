@@ -30,7 +30,7 @@ project. All GitHub-related badges may be found
 ![PyPI Implementation](https://img.shields.io/pypi/implementation/s3lst-ds)
 ![PyPI Wheel](https://img.shields.io/pypi/wheel/s3lst-ds)
 ![PyPI Status](https://img.shields.io/pypi/status/s3lst-ds)
-![GitHub last commit](https://img.shields.io/github/last-commit/eliocp/s3lst-ds)
+![GitHub last commit](https://img.shields.io/github/last-commit/CoLAB-ATLANTIC/s3lst-ds)
 [![uv](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FOnyx-Nostalgia%2Fuv%2Frefs%2Fheads%2Ffix%2Flogo-badge%2Fassets%2Fbadge%2Fv0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Hatch project](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pypa/hatch/master/docs/assets/badge/v0.json)](https://github.com/pypa/hatch)
