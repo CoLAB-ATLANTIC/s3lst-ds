@@ -7,6 +7,17 @@ built and published to [PyPI](https://pypi.org/) and how [GitHub
 releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
 may be created after successful merge pull requests.
 
+## Requirements
+
+
+
+* An [Unix](https://en.wikipedia.org/wiki/Unix)-like environment.
+* [`uv`](https://docs.astral.sh/uv/) project manager.
+* [`git`](https://git-scm.com/) version control system.
+* Repo owner [`CoLAB-ATLANTIC`](https://github.com/CoLAB-ATLANTIC) set as a [trusted
+  publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/#github-actions)
+  of the [PyPI project](https://pypi.org/project/s3lst-ds/).
+
 ## Release Workflow
 
 ### 1. Approve pull request

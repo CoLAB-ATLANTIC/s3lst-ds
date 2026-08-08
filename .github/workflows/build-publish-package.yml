@@ -49,6 +49,8 @@ jobs:
       # (https://github.com/marketplace/actions/astral-sh-setup-uv#python-version)
       - name: Install uv in the runner workspace and add it to PATH
         uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          enable-cache: false
 
       # Build the package (create source distribution and a respective standardly built
       # one (wheel) - two possible ways that PyPI consider for installation) and place
@@ -106,6 +108,9 @@ jobs:
       name: pypi
     permissions:
       # Fetch an OpenID Connect (OIDC) token
+      # WARNING: to use this, it is necessary add a trusted publisher (the repo owner)
+      # to the PyPI project:
+      # https://docs.pypi.org/trusted-publishers/adding-a-publisher/#github-actions
       # NOTE: this is required for GitHub Actions to authenticate to PyPI
       # NOTE:
       # https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-pypi
@@ -119,6 +124,10 @@ jobs:
       # (https://github.com/marketplace/actions/astral-sh-setup-uv#python-version)
       - name: Install uv in the runner workspace and add it to PATH
         uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          # `false` to not try to discover project files neither to configure a package
+          # cache (as these will not be needed in this job)
+          enable-cache: false
 
       # Download the distribution artifacts from the previous job (build)
       # NOTE: https://github.com/actions/download-artifact#usage
