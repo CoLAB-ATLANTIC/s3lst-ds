@@ -126,6 +126,10 @@ jobs:
           # `false` to not try to discover project files neither to configure a package
           # cache (as these will not be needed in this job)
           enable-cache: false
+          # `true` to ignore the fact that the runner workspace does does not contain
+          # the project files (no checkout was done since no cloning is required in this
+          # job)
+          ignore-empty-workdir: true
 
       # Download the distribution artifacts from the previous job (build)
       # NOTE: https://github.com/actions/download-artifact#usage
