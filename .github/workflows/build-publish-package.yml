@@ -49,8 +49,6 @@ jobs:
       # (https://github.com/marketplace/actions/astral-sh-setup-uv#python-version)
       - name: Install uv in the runner workspace and add it to PATH
         uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
-        with:
-          enable-cache: false
 
       # Build the package (create source distribution and a respective standardly built
       # one (wheel) - two possible ways that PyPI consider for installation) and place
