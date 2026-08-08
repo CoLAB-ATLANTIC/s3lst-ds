@@ -45,9 +45,11 @@ repos:
 
       # Id of the hook job to run
       # NOTE: uv-sync will sync the project (by running `uv sync` command)
-      # NOTE: by default, `uv sync` command also considers the dependency group "dev"
       - id: uv-sync
         # Arguments to pass to the hook job
+        args:
+          - --all-groups
+          - --all-extras
         # Hook triggers
         stages:
           - pre-commit
