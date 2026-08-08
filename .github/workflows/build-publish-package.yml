@@ -72,10 +72,11 @@ jobs:
       # the isolated virtual environment:
       # https://docs.astral.sh/uv/reference/cli/#uv-run--with
       # NOTE: `tests/smoke_test.py` corresponds to the script to run.
-      - name: Smoke test (source distribution)
-        run: uv run --isolated --no-project --with dist/*.tar.gz tests/smoke_test.py
-      - name: Smoke test (wheel)
-        run: uv run --isolated --no-project --with dist/*.whl tests/smoke_test.py
+      # TODO: create tests/smoke_test.py.
+      # - name: Smoke test (source distribution)
+      #   run: uv run --isolated --no-project --with dist/*.tar.gz tests/smoke_test.py
+      # - name: Smoke test (wheel)
+      #   run: uv run --isolated --no-project --with dist/*.whl tests/smoke_test.py
 
       # Upload the distributions as artifacts to the next job (publishing)
       # NOTE: separation of jobs is important to ease reproducibility and allow
