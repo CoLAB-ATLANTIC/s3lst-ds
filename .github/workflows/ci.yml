@@ -48,7 +48,7 @@ jobs:
 
       # Create venv
       - name: Create virtual environment with uv
-        run: uv sync --locked
+        run: uv sync --all-groups --all-extras --locked
 
       # Linting
       - name: Run lint check with ruff

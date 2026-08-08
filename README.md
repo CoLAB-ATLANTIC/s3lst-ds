@@ -167,12 +167,12 @@ after successful merge pull requests.
 
 If you use `s3lst-ds` in research or software, please cite the [companion
 paper](https://www.mdpi.com/2072-4292/18/13/2263). The respective citation information
-is provided in [`CITATION.cff`](https://github.com/eliocp/pingi/blob/main/CITATION.cff)
+is provided in [`CITATION.cff`](https://github.com/CoLAB-ATLANTIC/s3lst-ds/blob/main/CITATION.cff)
 and may be download in APA or BibTeX formats through button `Cite this repository` in
 the `About` section of the [GitHub repo
 page](https://github.com/CoLAB-ATLANTIC/s3lst-ds).
 
 ## License
 
-Pingi is licensed under the terms of the [MIT
-license](https://github.com/eliocp/pingi/blob/main/LICENSE). 
+`s3lst-ds` is licensed under the terms of the [MIT
+license](https://github.com/CoLAB-ATLANTIC/s3lst-ds/blob/main/LICENSE). 
