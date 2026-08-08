@@ -1,0 +1,79 @@
+# pre-commit hooks configuration file
+# NOTE: a hook is a "place", or, more bluntly, a trigger as well as the respective job
+# that had been associated with it - in the case of pre-commit, the trigger git command.
+# For instance, if the trigger is a commit, whenever a commit is attempted, the jobs
+# associated with that trigger will run and check if the code meets the requirements. If
+# it does not meet, the commit will fail.
+# NOTE: About structure of the .pre-commit-config.yaml file:
+# https://pre-commit.com/#pre-commit-configyaml---top-level
+
+
+# Git hook types (hook triggers) which will be installed by default when running
+# `pre-commit install`.
+# NOTE: About supported git hook types: https://pre-commit.com/#supported-git-hooks
+default_install_hook_types:
+  # On commit
+  # NOTE: https://pre-commit.com/#pre-commit
+  - pre-commit
+  # After git checkout (e.g. switching between branches, checking out commits and
+  # restoring files)
+  # NOTE: https://pre-commit.com/#post-checkout
+  - post-checkout
+  # After merging
+  # NOTE: https://pre-commit.com/#post-merge
+  - post-merge
+  # After rebasing and commit amending
+  # NOTE: https://pre-commit.com/#post-rewrite
+  - post-rewrite
+
+repos:
+  # Repo for uv's hook jobs
+  # NOTE: About the repo: https://github.com/astral-sh/uv-pre-commit
+  # NOTE: Descriptions of all uv's hooks jobs: https://github.com/astral-sh/uv-pre-commit/blob/main/.pre-commit-hooks.yaml
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    # Release tag of the pre-commit hook repo to use
+    rev: 0.12.2
+    # List of hook jobs to run
+    hooks:
+      # Id of the hook job to run
+      # NOTE: uv-lock hook will update uv.lock file based on package version constraints
+      # stated in pyproject.toml (by running `uv lock` command)
+      - id: uv-lock
+        # Hook triggers
+        stages:
+          - pre-commit
+
+      # Id of the hook job to run
+      # NOTE: uv-sync will sync the project (by running `uv sync` command)
+      # NOTE: by default, `uv sync` command also considers the dependency group "dev"
+      - id: uv-sync
+        # Arguments to pass to the hook job
+        # Hook triggers
+        stages:
+          - pre-commit
+          - post-checkout
+          - post-merge
+          - post-rewrite
+
+  # Repo for ruff's hook jobs
+  # NOTE: About the repo: https://github.com/astral-sh/ruff-pre-commit
+  # NOTE: Descriptions of all ruff's hook jobs: https://github.com/astral-sh/ruff-pre-commit/blob/main/.pre-commit-hooks.yaml
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Release tag of the pre-commit hook repo to use
+    rev: v0.16.1
+    # List of hook jobs to run
+    hooks:
+      # Id of the hook job to run
+      # NOTE: ruff-check will check the code for linting errors (by running `ruff check`
+      # command)
+      - id: ruff-check
+      # Hook triggers
+        stages:
+          - pre-commit
+
+      # Id of the hook job to run
+      # NOTE: ruff-format will format the code (by running `ruff format` command)
+      - id: ruff-format
+      # Hook triggers
+        stages:
+          - pre-commit

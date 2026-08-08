@@ -1,20 +1,12 @@
 #!/usr/bin/env bash
 
-# Exit on error (-e), on use of undefined variables (-u), and if any command in a
-# pipeline fails (-o pipefail).
-# For details, see: https://linuxcommand.org/lc3_man_pages/seth.html
-set -euo pipefail
+# Uninstall SNAP dependencies
 
-# ---> Get helpful paths
-# Get absolute path to this very script
-SCRIPT_FILE="$(realpath "${BASH_SOURCE[0]}")"
-# Get absolute path to parent directory of this very script (install)
-INSTALL_DIR="$(dirname "$SCRIPT_FILE")"
-# Get absolute path to parent directory of the install directory (scripts)
-SCRIPTS_DIR="$(dirname "$INSTALL_DIR")"
+# ---> Get absolute path to scripts directory
+SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# ---> Get custom printing functions as well as text style variables
-source "$SCRIPTS_DIR/utils/print.sh"
+# ---> Get utility functions
+source "$SCRIPTS_DIR/utils.sh"
 
 # ---> Uninstall SNAP dependencies
 info "Removing SNAP main installation directory (esa-snap)..."

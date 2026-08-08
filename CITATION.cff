@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: s3lst-ds
+type: software
+authors:
+  - family-names: Pereira
+    given-names: Élio
+  - family-names: Khudinyan
+    given-names: Manvel
+# About preferred-citation: https://github.com/citation-file-format/citation-file-format/blob/main/schema-guide.md#definitionsreference
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Pereira
+      given-names: Élio
+    - family-names: Khudinyan
+      given-names: Manvel
+    - family-names: Girão
+      given-names: Inês
+    - family-names: Marques
+      given-names: Bruno
+    - family-names: de Miranda
+      given-names: Vitor F. V. V.
+    - family-names: Sørup
+      given-names: Hjalte Jomo Danielsen
+    - family-names: Paletta
+      given-names: Quentin
+    - family-names: Oliveira
+      given-names: Ana
+  title: A Scale-Invariance-Based Algorithm Application for Land Surface Temperature Downscaling in Denmark
+  journal: Remote Sensing
+  volume: 18
+  year: 2026
+  number: 13
+  issn: 2072-4292
+  url: https://www.mdpi.com/2072-4292/18/13/2263
+  doi: 10.3390/rs18132263

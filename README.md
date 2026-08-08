@@ -21,6 +21,7 @@ project. All GitHub-related badges may be found
 <!-- GitHub time of last commit: https://shields.io/badges/git-hub-last-commit -->
 
 <!-- ---------------------------- Other badges ----------------------------- -->
+<!-- pre-commit usag: https://pre-commit.com/#badging-your-repository -->
 <!-- uv package and project manager usage: https://github.com/astral-sh/uv/pull/15075#issue-3291641128 -->
 <!-- Ruff linter and formatter usage: https://github.com/astral-sh/ruff/blob/main/README.md?plain=1 -->
 <!-- Hatch build backend usage: https://hatch.pypa.io/dev/next-steps/#community -->
@@ -31,6 +32,7 @@ project. All GitHub-related badges may be found
 ![PyPI Wheel](https://img.shields.io/pypi/wheel/s3lst-ds)
 ![PyPI Status](https://img.shields.io/pypi/status/s3lst-ds)
 ![GitHub last commit](https://img.shields.io/github/last-commit/CoLAB-ATLANTIC/s3lst-ds)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![uv](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FOnyx-Nostalgia%2Fuv%2Frefs%2Fheads%2Ffix%2Flogo-badge%2Fassets%2Fbadge%2Fv0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Hatch project](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pypa/hatch/master/docs/assets/badge/v0.json)](https://github.com/pypa/hatch)
@@ -40,90 +42,93 @@ conveniently querying, downloading, filtering and downscaling [Sentinel-3
 LST](https://sentiwiki.copernicus.eu/web/slstr-products#L2-LST-Products) data using
 either single or multi-timestamp scale-invariance-based models.
 
+<p>
+    <img src="docs/images/graphic_abstract.png" width="700" />
+</p>
 
-## (*Base*) Installation
+## Requirements
+
+To be able to install and use the [s3lst-ds](https://github.com/CoLAB-ATLANTIC/s3lst-ds)
+package in your project, you would need:
+
+* An [Unix](https://en.wikipedia.org/wiki/Unix)-like environment.
+* [`uv`](https://docs.astral.sh/uv/) project manager.
+* A [CDSE](https://dataspace.copernicus.eu/) account.
+
+## Installation
+
+### 1. Install package from PyPI
 
 * Install the latest stable release from [PyPI](https://pypi.org/project/s3lst-ds/) in
-the activated virtual environment using [`pip`](https://pypi.org/project/pip/) command:
-
-    ```bash
-    pip install s3lst-ds
-    ```
-    or [`uv`](https://docs.astral.sh/uv/):
+the activated virtual environment using [`uv`](https://docs.astral.sh/uv/):
 
     ```bash
     uv add s3lst-ds
     ```
 
-### Set CDSE credentials
+### 2. Set CDSE credentials
 
-[CDSE](https://dataspace.copernicus.eu/) credentials are required to download the
-Sentinel-3 data and must be safely set as environment variables in the system. This may
-be done through an appropriate script, either using the respective executable:
-
-```bash
-VENV/bin/s3lst-ds-set-cdse
-```
-
-(where `VENV` is the path to the installation directory of the virtual environment (e.g.
-`.venv`)), or, more conveniently, using `uv`:
-
-```bash
-uv run s3lst-ds-set-cdse
-```
-
-> [!NOTE]
-> The credentials will be written to file `~/.config/cdse_credentials.sh` with read and
-> write permissions solely issued to the user.
->
-> Note that if the user would like to remove the credentials at a later time, an appropriate script could be run through the respective excutable:
-> ```bash
-> VENV/bin/s3lst-ds-unset-cdse
-> ```
-> or, using `uv`:
-> 
-> ```bash
-> uv run s3lst-ds-unset-cdse
-> ```
-
-## (*Optional*) Snappy Installation
-
-The base installation considers
-[`rioxarray`](https://corteva.github.io/rioxarray/stable/) for georeferencing the
-Sentinel-3 products. However, [`snappy`](https://github.com/senbox-org/esa-snappy) has
-been found to produce better results, and, because of that, it is herein availed as an
-optional tool. The installation of this extra dependency requires two steps, in the
-following order:
-
-
-1. Installation of the `snappy` Python package using `pip`:
+* Safely set your [CDSE](https://dataspace.copernicus.eu/) credentials as environment
+  variables of the system:
 
     ```bash
-    pip install s3lst-ds[snap]
+    uv run s3lst-ds-set-cdse
     ```
 
-    or `uv`:
+### 3. Install [`esa-snappy`](https://github.com/senbox-org/esa-snappy) (optional)
+
+* Install [`esa-snappy`](https://github.com/senbox-org/esa-snappy) Python package using
+  `uv`:
 
     ```bash
     uv add s3lst-ds[snap]
     ```
 
-2. Installation of the backend [`SNAP`](https://earth.esa.int/eogateway/tools/snap) Java
-   package and subsequent configuration using the respective executable:
-
-    ```bash
-    VENV/bin/s3lst-ds-install-snap
-    ```
-
-    or, more conveniently, using `uv`:
+* Install the backend [`SNAP`](https://earth.esa.int/eogateway/tools/snap) Java
+   package and subsequently configure it using `uv`:
 
     ```bash
     uv run s3lst-ds-install-snap
     ```
 
+> [!NOTE]
+> #### CDSE credentials
+> CDSE credentials are required to download Sentinel-3 data. Script
+> `s3lst-ds-set-cdse` will prompt you to provide their CDSE mail and password.
+> The script will subsequently write them to file `~/.config/cdse_credentials.sh`
+> with user-only read and write permissions and source it in `~/.bashrc` file. You
+> may check the created credentials file using the command:
+>
+> ```bash
+> nano ~/.config/cdse_credentials.sh
+> ```
+>
+> Note that if you would like to remove the credentials from the file at a later
+> time, you may run:
+>
+> ```bash
+> uv run s3lst-ds-unset-cdse
+> ```
+>
+> #### Better downscaling results may be obtained with `esa-snappy`
+> The default installation considers
+> [`rioxarray`](https://corteva.github.io/rioxarray/stable/) for georeferencing the
+> downloaded Sentinel-3 products. However,
+> [`esa-snappy`](https://github.com/senbox-org/esa-snappy) has been found to produce better
+> results, and, because of that, it is herein availed as an optional tool. With its
+> installation, both tools can be used for georeferencing.
+>
+> #### Uninstall `SNAP`
+> If the you would to like to uninstall `SNAP` at a later time, you may run:
+> 
+> ```bash
+> uv run s3lst-ds-uninstall-snap
+> ```
+
 > [!WARNING]
-> It is important to note that SNAP is configured with a limited amount of memory. To
-> increase SNAP's maximum heap memory to for instance 64 GB, one would need to open file
+> #### `SNAP`'s memory limit
+> It is important to note that `SNAP` is configured with a limited amount of memory. To
+> increase `SNAP`'s maximum heap memory to for instance `64 GB`, you would need to open file
 > `esa_snappy.ini` nested in the installation directory of the virtual environment
 > (herein assumed to be `VENV`) by doing 
 >
@@ -137,66 +142,35 @@ following order:
 > java_max_mem: 64G
 > ```
 
-> [!NOTE]
-> If the user would to like to uninstall `SNAP` at a later time, an appropriate script
-> may be used, either through the respective executable:
->
-> ```bash
-> VENV/bin/s3lst-ds-uninstall-snap
-> ```
-> or, more conveniently, using `uv`:
-> 
-> ```bash
-> uv run s3lst-ds-uninstall-snap
-> ```
 
 ## Documentation
 
 To be built.
 
-## Development
+## Contributing
 
-### Installation of development dependencies
+If you are a project developer, please read
+[CONTRIBUTING.md](https://github.com/CoLAB-ATLANTIC/s3lst-ds/blob/main/CONTRIBUTING.md)
+to assimilate the development workflow, build Docker images from the project source code
+and locally run them.
 
-* Create the development environment using all dependency groups:
+## Releasing
 
-    ```bash
-    uv sync --all-groups
-    ```
+If you are a project maintainer, please read
+[RELEASING.md](https://github.com/CoLAB-ATLANTIC/s3lst-ds/blob/main/RELEASING.md) to
+know how to build and publish the package to [PyPI](https://pypi.org/) and to create
+[GitHub
+releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
+after successful merge pull requests.
 
-### Linting
+## Citation
 
-* Use [`ruff`](https://docs.astral.sh/ruff/linter/) for Python linting:
-
-    ```bash
-    uv run ruff check --fix --diff
-    ```
-    The command above will check for bugs, suspicious code, style violations, dead code,
-    complexity issues and import problems. It will further proposed fixes.
-
-* Apply the fixes:
-
-    ```bash
-    uv run ruff check --fix
-    ```
-
-### Formatting
-
-* Use [`ruff`](https://docs.astral.sh/ruff/formatter/) for Python formatting:
-
-    ```bash
-    uv run ruff format --diff
-    ```
-
-    The command above will check the code structure, namely, the indentation, spaces,
-    line breaks, quote style and long line wrapping. It will further show the proposed
-    changes.
-
-* Apply the changes:
-
-    ```bash
-    uv run ruff format
-    ```
+If you use `s3lst-ds` in research or software, please cite the [companion
+paper](https://www.mdpi.com/2072-4292/18/13/2263). The respective citation information
+is provided in [`CITATION.cff`](https://github.com/eliocp/pingi/blob/main/CITATION.cff)
+and may be download in APA or BibTeX formats through button `Cite this repository` in
+the `About` section of the [GitHub repo
+page](https://github.com/CoLAB-ATLANTIC/s3lst-ds).
 
 ## License
 

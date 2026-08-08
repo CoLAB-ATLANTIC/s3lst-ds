@@ -1,0 +1,59 @@
+# Continuous Integration (CI) workflow for lint and format checking
+name: Continuous Integration
+
+# Workflow trigger events
+# NOTE: to know all possible events, check
+# https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
+on:
+  # Trigger the workflow on push of any branch or commit tag (including merge pull
+  # request - since these involve a push to the target branch)
+  # NOTE:
+  # https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#push
+  push:
+  # Trigger the workflow when creating pull requests into the main branch
+  # NOTE:
+  # https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#pull_request
+  pull_request:
+    branches:
+      - main
+
+# Workflow jobs
+jobs:
+  # Job to do lint and format checking as well as  code testing
+  lint-format-test:
+    name: Run lint and format check with ruff and perform tests with pytest
+    # Machine type to run the job on
+    # NOTE: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idruns-on
+    runs-on: ubuntu-latest
+
+    # Steps to execute in the job
+    steps:
+      # Use GitHub Action Checkout to clone repo into the runner workspace
+      # NOTE: https://github.com/actions/checkout#checkout-v4
+      - name: Clone repo into runner workspace
+        uses: actions/checkout@v7
+        with:
+          # Do not persist the GitHub token credentials to the runner workspace so that
+          # the runner workspace cannot use them for other token-required operations
+          # such as pushing. This is recommended for security reasons.
+          # NOTE: https://github.com/actions/checkout/issues/485
+          persist-credentials: false
+
+      # Install uv in the runner workspace
+      # NOTE: https://github.com/marketplace/actions/astral-sh-setup-uv
+      # NOTE: by default, uses python version specified in pyproject.toml
+      # (https://github.com/marketplace/actions/astral-sh-setup-uv#python-version)
+      - name: Install uv in the runner workspace and add it to PATH
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+
+      # Create venv
+      - name: Create virtual environment with uv
+        run: uv sync --locked
+
+      # Linting
+      - name: Run lint check with ruff
+        run: uv run ruff check .
+
+      # Formatting
+      - name: Run format check with ruff
+        run: uv run ruff format --check .

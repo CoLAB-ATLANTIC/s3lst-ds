@@ -1,24 +1,21 @@
 #!/usr/bin/env bash
 
-# Exit on error (-e), on use of undefined variables (-u), and if any command in a
-# pipeline fails (-o pipefail).
-# For details, see: https://linuxcommand.org/lc3_man_pages/seth.html
-set -euo pipefail
+# Functions for printing,
 
-# ---> Define print functions
+# ---> Define printing functions
 # Define function for printing info messages
 info() {
-    printf "\033[36m[INFO]\033[0m %s\n" "$*"
+    printf "\033[36m[INFO]\033[0m %b\n" "$*"
 }
 
 # Define function for printing warning messages
 warn() {
-    printf "\033[33m[WARN]\033[0m %s\n" "$*"
+    printf "\033[33m[WARN]\033[0m %b\n" "$*"
 }
 
 # Define function for printing error messages
 error() {
-    printf "\033[31m[ERROR]\033[0m %s\n" "$*"
+    printf "\033[31m[ERROR]\033[0m %b\n" "$*"
 }
 
 # ---> Define text style variables
@@ -29,6 +26,7 @@ GREEN="\033[34;32m"
 YELLOW="\033[34;33m"
 BLUE="\033[34;34m"
 CYAN="\033[34;36m"
+MAGENTA="\033[35m"
 # Bold
 BOLD="\033[1m"
 # Reset

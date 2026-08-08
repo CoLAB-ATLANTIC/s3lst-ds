@@ -7,25 +7,17 @@ set -euo pipefail
 
 # ---> Get helpful paths
 WORKING_DIR="$PWD"
-# Get absolute path to this very script
-SCRIPT_FILE="$(realpath "${BASH_SOURCE[0]}")"
-# Get absolute path to parent directory of this very script (install)
-INSTALL_DIR="$(dirname "$SCRIPT_FILE")"
-# Get absolute path to parent directory of the install directory (scripts)
-SCRIPTS_DIR="$(dirname "$INSTALL_DIR")"
-
+# Get absolute path to scripts directory
+SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # Get absolute path to SNAP installation directory
 SNAP_DIR="$HOME/esa-snap"
 
-# ---> Get custom printing functions as well as text style variables
-source "$SCRIPTS_DIR/utils/print.sh"
-
 # ---> Uninstall SNAP dependencies if they were previously installed
-source "$INSTALL_DIR/uninstall_snap.sh"
+source "$SCRIPTS_DIR/install/uninstall_snap.sh"
 
 # ---> Download and install SNAP and configure snappy to use the former
 # Change to install directory to download SNAP to it
-cd "$INSTALL_DIR"
+cd "$SCRIPTS_DIR/install"
 
 # Remove any existing SNAP installer in the install directory to avoid issues with
 # multiple file names
@@ -47,8 +39,8 @@ PYTHON_VERSION_MINOR="$(python -c 'import sys; print(sys.version_info.minor)')"
 
 # Set the SNAP version to install based on the minor of the python version of the
 # virtual environment
-# NOTE: the latest python version supported by the latst SNAP version usually hasa as
-# minor as the major of the latter. E.g SNAP 13.0.0 supports Python 3.13.
+# NOTE: the latest python version supported by the latest SNAP version usually has as
+# minor the major of the latter. E.g SNAP 13.0.0 supports Python 3.13.
 SNAP_VERSION="$PYTHON_VERSION_MINOR.0.0"
 
 # Download SNAP to install directory and quietly install it

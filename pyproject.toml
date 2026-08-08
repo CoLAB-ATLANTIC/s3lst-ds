@@ -5,7 +5,7 @@
 # ---> Main project metadata
 [project]
 name = "s3lst-ds"
-version = "0.1.0"
+version = "0.1.1"
 description = "A package for downscaling Sentinel-3 LST data using a scale-invariance-based model."
 authors = [
     { name = "Élio Pereira", email = "elio.pereira@tuta.io" },
@@ -32,6 +32,8 @@ readme = "README.md"
 # https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license to know
 # more about the license field.
 # NOTE: Check https://spdx.org/licenses/ for a list of valid identifiers.
+# NOTE: For the case of proprietary licenses `"LicenseRef-Proprietary"` should be used
+# (https://packaging.python.org/en/latest/guides/licensing-examples-and-user-scenarios/#i-have-a-private-package-that-won-t-be-distributed).
 # NOTE: MIT license: https://spdx.org/licenses/MIT.html
 license = "MIT"
 # Glob paths to the license files
@@ -39,7 +41,9 @@ license = "MIT"
 # https://packaging.python.org/en/latest/tutorials/packaging-projects/#creating-a-license
 # to how to create a license file.
 # NOTE: MIT license file: https://choosealicense.com/licenses/mit/
-# WARNING: [year] and [fullname] entries in the file  must be replaced.
+# WARNING: [year] and [fullname] entries in the file must be replaced.
+# NOTE: "LICEN[CS]E*" is a glob pattern that matches both "LICENSE" (american english)
+# and "LICENCE" (british and commonwealth english) files with additional suffixes.
 license-files = ["LICEN[CS]E*"]
 
 # PyPI classifiers
@@ -58,7 +62,6 @@ classifiers = [
 # Minimum version of Python that is supported
 requires-python = ">=3.13"
 
-
 # Runtime dependencies (the main dependencies that are required to run the package)
 dependencies = [
     "geopandas>=1.1.4",
@@ -71,36 +74,36 @@ dependencies = [
     "tqdm>=4.70.0",
 ]
 
-
 # ---> Additional dependency groups for development
 # NOTE: Command `uv sync --group GROUP` will install the dependencies in the group
 # `GROUP` besides the runtime ones.
 [dependency-groups]
-dev = ["ruff>=0.16.1"]
+dev = ["pre-commit>=4.6.1", "ruff>=0.16.1"]
 docs = ["ipykernel>=7.3.0", "ipython>=9.16.0"]
 
 
 # ---> Additional dependency groups for usage
-# NOTE: After publishing to PyPI, command `pip install s3lst-ds[GROUP]` can
-# install the dependencies in the group `GROUP` besides the runtime ones. For more
-# details, read
-# https://docs.astral.sh/uv/concepts/projects/dependencies/#multiple-sources.
+# NOTE: After publishing to PyPI, command `pip install s3lst-ds[GROUP]` can install the
+# dependencies in the group `GROUP` besides the runtime ones. For more details, read
+# https://docs.astral.sh/uv/concepts/projects/dependencies/#multiple-sources. In the
+# case of using the project repository, command `uv sync --extra GROUP` may be used to
+# install the group dependency.
 [project.optional-dependencies]
 # Python wrapper for SNAP
 snap = ["esa-snappy>=1.1.3"]
 
 # ---> Scripts that can be run from the command line after installing the package
+# NOTE: After installation, command `uv run COMMAND` where COMMAND is the key herein
+# given to the respective module path and function (COMMAND = "MODULE_PATH:FUNCTION")
+# will be available to run the function.
 [project.scripts]
-# Command for setting CDSE credentials as environment variables
-# NOTE: After installation, command `uv run s3lst-set-cdse` may be run in the terminal
-# to set CDSE credentials. The command uses function `set_cdse` from the module
-# `s3lst_ds.cli`.
+# Set CDSE credentials as environment variables
 s3lst-ds-set-cdse = "s3lst_ds.cli:set_cdse"
-# Command for removing CDSE credentials
+# Remove CDSE credentials
 s3lst-ds-unset-cdse = "s3lst_ds.cli:unset_cdse"
-# Command for (re)installing SNAP and configuring snappy
+# (Re)install SNAP and configure snappy
 s3lst-ds-install-snap = "s3lst_ds.cli:install_snap"
-# Command for uninstalling SNAP
+# Uninstall SNAP
 s3lst-ds-uninstall-snap = "s3lst_ds.cli:uninstall_snap"
 
 # ---> URLs associated with the project
@@ -128,3 +131,15 @@ build-backend = "hatchling.build"
 # Location of the source code of the package to be used by the Hatchling build backend
 # NOTE: https://github.com/pypa/hatch/blob/master/docs/config/build.md#packages
 packages = ["src/s3lst_ds"]
+
+
+# ---> Development tools' configurations
+# ruff configuration
+# NOTE: https://github.com/astral-sh/ruff#configuration
+[tool.ruff]
+# Assume a python version
+target-version = "py313"
+# Line maximum length
+line-length = 88
+# Indentation width
+indent-width = 4

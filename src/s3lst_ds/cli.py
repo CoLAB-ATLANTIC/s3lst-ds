@@ -2,7 +2,6 @@ import logging
 import stat
 import subprocess
 from importlib.resources import files
-
 from pathlib import Path
 
 from rich.prompt import Prompt
@@ -30,8 +29,8 @@ def set_cdse() -> None:
 
     # ---> Get CDSE credentials, write them to the configuration file and give permissions for reading and writing solely to the user
     # Prompt user for CDSE credentials
-    cdse_user = Prompt.ask(prompt="CDSE email")
-    cdse_pass = Prompt.ask("CDSE password", password=True)
+    cdse_user = Prompt.ask(prompt="         CDSE email")
+    cdse_pass = Prompt.ask(prompt="         CDSE password", password=True)
     # Define the path to the configuration file
     path_config = Path.home() / ".config" / "cdse_credentials.sh"
     # Create the parent directory if it doesn't exist
@@ -79,6 +78,8 @@ def set_cdse() -> None:
 def unset_cdse() -> None:
     """
     Remove CDSE credentials from configuration file `~/.config/cdse_credentials.sh`.
+    Note that the respective environment variables would still be available in the
+    current shell session until the user opens a new one.
     """
 
     # ---> Create logger
@@ -93,12 +94,13 @@ def unset_cdse() -> None:
     # Get the path to the configuration file
     path_config = Path.home() / ".config" / "cdse_credentials.sh"
 
-    # Make the configuration file empty if it exists or is not already empty
+    # Make the configuration file empty if it exists and is not already empty
     if not path_config.exists() or path_config.stat().st_size == 0:
-        logger.info("Nothing done. CDSE credentials were not set.")
+        logger.info("Nothing done. CDSE credentials had not been set.")
     else:
         # Overwrite file content with empty string
         path_config.write_text("")
+
         logger.info("Done.")
 
 

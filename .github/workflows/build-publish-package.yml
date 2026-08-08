@@ -1,0 +1,141 @@
+# GitHub workflow for building and publishing the package to PyPI
+# NOTE: this workflow is based on uv's official documentation:
+# https://docs.astral.sh/uv/guides/integration/github/#publishing-to-pypi
+name: Build and publish package to PyPI
+
+# Workflow trigger events
+# NOTE: to know all possible events, check
+# https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
+on:
+  # Trigger the workflow on commit tag pushes whose tags are associated with a semantic
+  # versioning (semver) pattern (that is, starting with "v", e.g., v1.0.0, v1.5.0-rc.1,
+  # v2.0.0-alpha.1, etc.)
+  # NOTE:
+  # https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#push
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  # Build package
+  build:
+    name: Build package
+    # Machine type to run the job on
+    # NOTE: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idruns-on
+    runs-on: ubuntu-latest
+    # Modify default permissions of the GITHUB_TOKEN (this is a secret that is created
+    # by GitHub for each workflow run and is used for authentication)
+    # NOTE:
+    # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions
+    permissions:
+      contents: read
+
+    # Steps to execute in the job
+    steps:
+      # Use GitHub Action Checkout to clone repo into the runner workspace
+      # NOTE: https://github.com/actions/checkout#checkout-v4
+      - name: Clone repo into runner workspace
+        uses: actions/checkout@v7
+        with:
+          # Do not persist the GitHub token credentials to the runner workspace so that
+          # the runner workspace cannot use them for other token-required operations
+          # such as pushing. This is recommended for security reasons.
+          # NOTE: https://github.com/actions/checkout/issues/485
+          persist-credentials: false
+
+      # Install uv in the runner workspace
+      # NOTE: https://github.com/marketplace/actions/astral-sh-setup-uv
+      # NOTE: by default, uses python version specified in pyproject.toml
+      # (https://github.com/marketplace/actions/astral-sh-setup-uv#python-version)
+      - name: Install uv in the runner workspace and add it to PATH
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+
+      # Build the package (create source distribution and a respective standardly built
+      # one (wheel) - two possible ways that PyPI consider for installation) and place
+      # the artifacts in a `dist/` folder
+      # NOTE: https://packaging.python.org/en/latest/glossary/#term-Source-Distribution-or-sdist
+      # NOTE: https://packaging.python.org/en/latest/glossary/#term-Wheel
+      - name: Build package
+        run: uv build
+
+      # Perform smoke tests on the distributions (that is, check if a completely fresh
+      # Python environment can install the package from the distributions, and can it
+      # successfully import and run a minimal piece of functionality)
+      # NOTE: flag `--isolated` is used to run the command in an isolated virtual
+      # environment (not of the runner workspace):
+      # https://docs.astral.sh/uv/reference/cli/#uv-run--isolated
+      # NOTE: flag `--no-project` to not discover the project of the runner workspace so
+      # that none of its content used:
+      # https://docs.astral.sh/uv/reference/cli/#uv-run--no-project
+      # NOTE: flag `--with dist/*.tar.gz` and `--with dist/*.whl` to install the package
+      # from the distribution file (source distribution and wheel, respectively) into
+      # the isolated virtual environment:
+      # https://docs.astral.sh/uv/reference/cli/#uv-run--with
+      # NOTE: `tests/smoke_test.py` corresponds to the script to run.
+      - name: Smoke test (source distribution)
+        run: uv run --isolated --no-project --with dist/*.tar.gz tests/smoke_test.py
+      - name: Smoke test (wheel)
+        run: uv run --isolated --no-project --with dist/*.whl tests/smoke_test.py
+
+      # Upload the distributions as artifacts to the next job (publishing)
+      # NOTE: separation of jobs is important to ease reproducibility and allow
+      # separation of permissions.
+      # NOTE: https://github.com/actions/upload-artifact#usage
+      - name: Upload distributions to the publishing job
+        uses: actions/upload-artifact@v7
+        with:
+          # Label to assign to the artifact (so that it may be used in the download)
+          name: dist
+          # Path to the artifact to upload
+          path: dist/
+
+  # Publish package
+  publish:
+    name: Publish package
+    # Jobs whose success the current one depends on to run
+    # NOTE:
+    # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idneeds
+    needs:
+      - build
+    # Machine type to run the job on
+    # NOTE: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idruns-on
+    runs-on: ubuntu-latest
+    environment:
+      # Name to assign to the runner workflow environment
+      name: pypi
+    permissions:
+      # Fetch an OpenID Connect (OIDC) token
+      # NOTE: this is required for GitHub Actions to authenticate to PyPI
+      # NOTE:
+      # https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-pypi
+      # NOTE:
+      # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions
+      id-token: write
+    steps:
+      # Install uv in the runner workspace
+      # NOTE: https://github.com/marketplace/actions/astral-sh-setup-uv
+      # NOTE: by default, uses python version specified in pyproject.toml
+      # (https://github.com/marketplace/actions/astral-sh-setup-uv#python-version)
+      - name: Install uv in the runner workspace and add it to PATH
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+
+      # Download the distribution artifacts from the previous job (build)
+      # NOTE: https://github.com/actions/download-artifact#usage
+      - name: Download distributions artifact
+        uses: actions/download-artifact@v8
+        with:
+          # Label of the artifact to download (must match the label used in the upload)
+          name: dist
+          # Destination path for the downloaded artifact
+          path: dist/
+
+      # Generate PEP 740 attestations for your Python package distributions (this is
+      # important for anyone that will use the package to verify the authenticity of the
+      # package and its source code)
+      # NOTE: https://github.com/astral-sh/attest-action#usage
+      - name: Generate PEP 740 attestations
+        uses: astral-sh/attest-action@f589a42a7efb6fe400b4f400de60b4bc90390027 # v0.0.6
+
+      # Publish the package to PyPI
+      - name: Publish package
+        run: uv publish
