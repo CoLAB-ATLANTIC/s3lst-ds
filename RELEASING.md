@@ -9,9 +9,7 @@ may be created after successful merge pull requests.
 
 ## Requirements
 
-
-
-* An [Unix](https://en.wikipedia.org/wiki/Unix)-like environment.
+To publish the package to PyPI and create a GitHub release, you would need:
 * [`uv`](https://docs.astral.sh/uv/) project manager.
 * [`git`](https://git-scm.com/) version control system.
 * Repo owner [`CoLAB-ATLANTIC`](https://github.com/CoLAB-ATLANTIC) set as a [trusted

@@ -54,6 +54,13 @@ To develop the present project you would need:
     uv sync --all-groups --all-extras
     ```
 
+* Install the backend [`SNAP`](https://earth.esa.int/eogateway/tools/snap) Java package
+   and subsequently configure it using `uv`:
+
+    ```bash
+    uv run s3lst-ds-install-snap
+    ```
+
 * Install all [git hooks](https://pre-commit.com/#supported-git-hooks) in accordance
   with
   [`.pre-commit-config.yaml`](https://github.com/CoLAB-ATLANTIC/s3lst-ds/blob/main/.pre-commit-config.yaml):
