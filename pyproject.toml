@@ -5,7 +5,7 @@
 # ---> Main project metadata
 [project]
 name = "s3lst-ds"
-version = "0.1.1"
+version = "0.1.8"
 description = "A package for downscaling Sentinel-3 LST data using a scale-invariance-based model."
 authors = [
     { name = "Élio Pereira", email = "elio.pereira@tuta.io" },
@@ -64,6 +64,7 @@ requires-python = ">=3.13"
 
 # Runtime dependencies (the main dependencies that are required to run the package)
 dependencies = [
+    "fastparquet>=2026.5.0",
     "geopandas>=1.1.4",
     "netcdf4>=1.7.4",
     "optuna>=4.9.0",
