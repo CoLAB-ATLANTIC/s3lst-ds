@@ -43,7 +43,7 @@ LST](https://sentiwiki.copernicus.eu/web/slstr-products#L2-LST-Products) data us
 either single or multi-timestamp scale-invariance-based models.
 
 <p>
-    <img src="docs/images/graphic_abstract.png" width="700" />
+    <img src="https://github.com/CoLAB-ATLANTIC/s3lst-ds/blob/main/docs/images/graphic_abstract.png?raw=true" width="700" />
 </p>
 
 ## Requirements
