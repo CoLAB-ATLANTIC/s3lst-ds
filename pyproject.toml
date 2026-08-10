@@ -64,6 +64,7 @@ requires-python = ">=3.13"
 
 # Runtime dependencies (the main dependencies that are required to run the package)
 dependencies = [
+    "fastparquet>=2026.5.0",
     "geopandas>=1.1.4",
     "netcdf4>=1.7.4",
     "optuna>=4.9.0",
