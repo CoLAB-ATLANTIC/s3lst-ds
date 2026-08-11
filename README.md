@@ -84,11 +84,16 @@ the activated virtual environment using [`uv`](https://docs.astral.sh/uv/):
     uv add s3lst-ds[snap]
     ```
 
-* Install the backend [`SNAP`](https://earth.esa.int/eogateway/tools/snap) Java
-   package and subsequently configure it using `uv`:
+* Install the backend [`SNAP`](https://earth.esa.int/eogateway/tools/snap) Java package
+  (if not already installed) and subsequently configure it using `uv`:
 
     ```bash
     uv run s3lst-ds-install-snap
+    ```
+* If `SNAP` was already installed, configure it and `esa-snappy` using `uv`:
+
+    ```bash
+    uv run s3lst-ds-configure-snap
     ```
 
 > [!NOTE]

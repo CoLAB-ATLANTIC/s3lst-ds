@@ -106,6 +106,8 @@ s3lst-ds-unset-cdse = "s3lst_ds.cli:unset_cdse"
 s3lst-ds-install-snap = "s3lst_ds.cli:install_snap"
 # Uninstall SNAP
 s3lst-ds-uninstall-snap = "s3lst_ds.cli:uninstall_snap"
+# Configure snappy
+s3lst-ds-configure-snap = "s3lst_ds.cli:configure_snap"
 
 # ---> URLs associated with the project
 # NOTE: Check https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#urls

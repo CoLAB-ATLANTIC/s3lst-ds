@@ -134,3 +134,19 @@ def uninstall_snap() -> None:
         # Raise error if the command fails
         check=True,
     )
+
+
+def configure_snap() -> None:
+    """
+    Configure snappy by running the configuration script
+    `scripts/install/configure_snap.sh`.
+    """
+    # Path to snappy configuration script
+    script = files("s3lst_ds").joinpath("scripts/install/configure_snap.sh")
+    # Run script
+    subprocess.run(
+        # Command arguments
+        ["bash", str(script)],
+        # Raise error if the command fails
+        check=True,
+    )

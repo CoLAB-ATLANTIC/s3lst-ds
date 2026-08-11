@@ -5,6 +5,7 @@ from typing import Any, Literal
 
 import numpy as np
 import optuna
+import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.neural_network import MLPRegressor
 
@@ -278,15 +279,15 @@ class TuneConfig:
         This parameter is enforced regardless of the downscaler being issued or created
         from scratch.
 
-    timestamps : list[str] or None, default=None
-        If `data_batcher` is not issued: timestamps of interest, in any format parsable
-        by `pd.Timestamp` (e.g. `"YYYY-MM-DD HH:MM:SS"`). These must correspond to the
-        start sensing times of the respective acquisitions. Furthermore, they must be
-        part of those regarded by `data_batcher_data_wrangler_path_sentinel3`.  If
-        neither `timestamps` nor `data_batcher` are issued, `timestamps` will be set to
-        all of those regarded by such path. If `timestamps` is not issued but
-        `data_batcher` is, `timestamps` will be set to all of those regarded by the
-        batcher.
+    timestamps : list[pd.Timestamp] or list[str] or None, default=None
+        If `data_batcher` is not issued: timestamps of interest either as `pd.Timestamp`
+        values or in any format parsable by `pd.Timestamp` (e.g. `"YYYY-MM-DD
+        HH:MM:SS"`). These must correspond to the start sensing times of the respective
+        acquisitions. Furthermore, they must be part of those regarded by
+        `data_batcher_data_wrangler_path_sentinel3`.  If neither `timestamps` nor
+        `data_batcher` are issued, `timestamps` will be set to all of those regarded by
+        such path. If `timestamps` is not issued but `data_batcher` is, `timestamps`
+        will be set to all of those regarded by the batcher.
 
     sample_weight_fit: str or None, default=None
         Alias of the variable to be regarded as sample weight for cross-validation and
@@ -394,7 +395,7 @@ class TuneConfig:
     downscaler_encode: Literal["one_hot", "dummy"] | None = "dummy"
     downscaler_transform: Literal["center", "standardize"] | None = None
     downscaler_max_workers: int = 1
-    timestamps: list[str] | None = None
+    timestamps: list[pd.Timestamp] | list[str] | None = None
     sample_weight_fit: str | None = None
     sample_weight_score: str | None = None
     scorers: list[str] = field(default_factory=lambda: ["r2", "rmse", "mae", "mbe"])

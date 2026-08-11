@@ -99,6 +99,7 @@ def downscale(
 
     # Create logger
     logger = RichLogger(
+        name="downscale",
         level=logging.INFO,
         file_path=(
             Path(config.path_out) / "downscale.log"
@@ -135,7 +136,7 @@ def downscale(
         logger.info("The downscaler will now be loaded from file.")
         try:
             with logger.console.status(
-                f"{'':7}Loading downscaler from file...",
+                f"{'':7}Loading downscaler from file[yellow]...[/yellow]",
                 spinner="dots",
                 spinner_style="bold blue",
             ):
@@ -175,7 +176,7 @@ def downscale(
         logger.info("The data wrangler will now be loaded from file.")
         try:
             with logger.console.status(
-                f"{'':7}Loading data wrangler from file...",
+                f"{'':7}Loading data wrangler from file[yellow]...[/yellow]",
                 spinner="dots",
                 spinner_style="bold blue",
             ):
@@ -272,7 +273,12 @@ def downscale(
     # Parse timestamps
     timestamps = {"sentinel": {}}
     timestamps["sentinel"]["infer"] = (
-        [pd.Timestamp(timestamp) for timestamp in config.timestamps_infer]
+        [
+            pd.Timestamp(timestamp)
+            if not isinstance(timestamp, pd.Timestamp)
+            else timestamp
+            for timestamp in config.timestamps_infer
+        ]
         if config.timestamps_infer is not None
         else (
             data_wrangler.timestamps
@@ -285,7 +291,12 @@ def downscale(
         )
     )
     timestamps["sentinel"]["train"] = (
-        [pd.Timestamp(timestamp) for timestamp in config.timestamps_fit]
+        [
+            pd.Timestamp(timestamp)
+            if not isinstance(timestamp, pd.Timestamp)
+            else timestamp
+            for timestamp in config.timestamps_fit
+        ]
         if config.timestamps_fit is not None and downscaler_architecture == Downscaler
         else (
             timestamps["sentinel"]["infer"]
@@ -417,7 +428,8 @@ def downscale(
             # Train the downscaler with the training coarse data
             if downscaler_architecture == Downscaler:
                 with logger.console.status(
-                    f"{'':7}Training downscaler with the coarse data...",
+                    f"{'':7}Training downscaler with the coarse data"
+                    "[yellow]...[/yellow]",
                     spinner="dots",
                     spinner_style="bold blue",
                 ):
@@ -733,7 +745,8 @@ def downscale(
             )
             try:
                 with logger.console.status(
-                    f"{'':7}Writing {object_alias.replace('_', ' ')} to file...",
+                    f"{'':7}Writing {object_alias.replace('_', ' ')} to file"
+                    "[yellow]...[/yellow]",
                     spinner="dots",
                     spinner_style="bold blue",
                 ):
