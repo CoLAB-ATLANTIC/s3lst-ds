@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
 
-# Exit on error (-e), on use of undefined variables (-u), and if any command in a
-# pipeline fails (-o pipefail).
-# For details, see: https://linuxcommand.org/lc3_man_pages/seth.html
-set -euo pipefail
+# Install SNAP, snappy and configure
 
 # ---> Get helpful paths
 WORKING_DIR="$PWD"
 # Get absolute path to scripts directory
 SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-# Get absolute path to SNAP installation directory
-SNAP_DIR="$HOME/esa-snap"
 
 # ---> Uninstall SNAP dependencies if they were previously installed
 source "$SCRIPTS_DIR/install/uninstall_snap.sh"
@@ -86,16 +81,4 @@ info "Done."
 cd "$WORKING_DIR"
 
 # ---> Configure snappy
-
-# Get the path to the python binary of the activated virtual environment
-PYTHON_BIN="$(python -c 'import sys; print(sys.executable)')"
-
-# Associates the activated virtual environment (which contains snappy) with the SNAP
-# installation
-info "Configuring snappy..."
-if "$HOME/esa-snap/bin/snappy-conf" "$PYTHON_BIN"; then
-    info "Done."
-else
-    error "Failed."
-    return 1
-fi
+source "$SCRIPTS_DIR/install/configure_snap.sh"

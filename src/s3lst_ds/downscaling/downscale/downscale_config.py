@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
+import pandas as pd
 from sklearn.linear_model import LinearRegression
 
 from s3lst_ds.data_wrangling.data_wrangling import DataWrangler
@@ -172,26 +173,27 @@ class DownscaleConfig:
         timestamp can only be done with a downscaler trained with the coarse data of
         that same timestamp.
 
-    timestamps_infer : list[str] or None, default=None
-        Timestamps for inferring fine target with the downscaler, in any format parsable
-        by `pd.Timestamp` (e.g. `"YYYY-MM-DD HH:MM:SS"`). These must correspond to the
-        start sensing times of the respective acquisitions. Furthermore, they must be
-        part of the timestamps of the `data_wrangler` if it was issued, or
-        `data_wrangler_path_sentinel3` if it was not. If `timestamps_infer` is not
-        issued, it will be set to all such timestamps.
+    timestamps_infer : list[pd.Timestamp] or list[str] or None, default=None
+        Timestamps for inferring fine target with the downscaler either as
+        `pd.Timestamp` values or in any format parsable by `pd.Timestamp` (e.g.
+        `"YYYY-MM-DD HH:MM:SS"`). These must correspond to the start sensing times of
+        the respective acquisitions. Furthermore, they must be part of the timestamps of
+        the `data_wrangler` if it was issued, or `data_wrangler_path_sentinel3` if it
+        was not. If `timestamps_infer` is not issued, it will be set to all such
+        timestamps.
 
-    timestamps_fit : list[str] or None, default=None
-        Timestamps for training the downscaler, in any format parsable by `pd.Timestamp`
-        (e.g. `"YYYY-MM-DD HH:MM:SS"`). These must correspond to the start sensing times
-        of the respective acquisitions. Furthermore, they must be part of the timestamps
-        of the `data_wrangler` if it was issued, or `data_wrangler_path_sentinel3` if it
-        was not. If `timestamps_fit` is not issued and the downscaler is a
-        multi-timestamp one, it will be set to all such timestamps. If the architecture
-        of the downscaler is single-timestamp, `timestamps_fit` is set to
-        `timestamps_infer` regardless of the issued value. Note that in the case of the
-        single-timestamp architecture, inference of the fine target of some timestamp
-        can only be done with a downscaler trained with the coarse data of that same
-        timestamp.
+    timestamps_fit : list[pd.Timestamp] or list[str] or None, default=None
+        Timestamps for training the downscaler either as `pd.Timestamp` values or in any
+        format parsable by `pd.Timestamp` (e.g. `"YYYY-MM-DD HH:MM:SS"`). These must
+        correspond to the start sensing times of the respective acquisitions.
+        Furthermore, they must be part of the timestamps of the `data_wrangler` if it
+        was issued, or `data_wrangler_path_sentinel3` if it was not. If `timestamps_fit`
+        is not issued and the downscaler is a multi-timestamp one, it will be set to all
+        such timestamps. If the architecture of the downscaler is single-timestamp,
+        `timestamps_fit` is set to `timestamps_infer` regardless of the issued value.
+        Note that in the case of the single-timestamp architecture, inference of the
+        fine target of some timestamp can only be done with a downscaler trained with
+        the coarse data of that same timestamp.
 
     sample_weight_fit: str or None, default=None
         Alias of the variable to be regarded as sample weight for training the
@@ -274,8 +276,8 @@ class DownscaleConfig:
     downscaler_encode: Literal["one_hot", "dummy"] | None = "dummy"
     downscaler_transform: Literal["center", "standardize"] | None = None
     downscaler_max_workers: int = 1
-    timestamps_infer: list[str] | None = None
-    timestamps_fit: list[str] | None = None
+    timestamps_infer: list[pd.Timestamp] | list[str] | None = None
+    timestamps_fit: list[pd.Timestamp] | list[str] | None = None
     sample_weight_fit: str | None = None
     sample_weight_score: str | None = None
     score: bool = True

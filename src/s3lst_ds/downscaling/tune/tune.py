@@ -81,7 +81,7 @@ def train(
     try:
         with (
             logger.console.status(
-                f"{'':7}Training the downscaler...",
+                f"{'':7}Training the downscaler[yellow]...[/yellow]",
                 spinner="dots",
                 spinner_style="bold blue",
             )
@@ -581,6 +581,7 @@ def tune(
 
     # Create logger
     logger = RichLogger(
+        name="tune",
         level=logging.INFO,
         file_path=(
             Path(config.path_out) / "tune.log" if config.path_out is not None else None
@@ -622,7 +623,7 @@ def tune(
         logger.info("The downscaler will now be loaded from file.")
         try:
             with logger.console.status(
-                f"{'':7}Loading downscaler from file...",
+                f"{'':7}Loading downscaler from file[yellow]...[/yellow]",
                 spinner="dots",
                 spinner_style="bold blue",
             ):
@@ -659,7 +660,7 @@ def tune(
         logger.info("The data batcher will now be loaded from file.")
         try:
             with logger.console.status(
-                f"{'':7}Loading data batcher from file...",
+                f"{'':7}Loading data batcher from file[yellow]...[/yellow]",
                 spinner="dots",
                 spinner_style="bold blue",
             ):
@@ -725,7 +726,12 @@ def tune(
 
     # Parse timestamps
     timestamps = (
-        [pd.Timestamp(timestamp) for timestamp in config.timestamps]
+        [
+            pd.Timestamp(timestamp)
+            if not isinstance(timestamp, pd.Timestamp)
+            else timestamp
+            for timestamp in config.timestamps
+        ]
         if config.data_batcher is None and config.timestamps is not None
         else (
             data_batcher.data_wrangler.timestamps
@@ -816,7 +822,7 @@ def tune(
         logger.info("The data will now be batched.")
         try:
             with logger.console.status(
-                f"{'':7}Batching the data...",
+                f"{'':7}Batching the data[yellow]...[/yellow]",
                 spinner="dots",
                 spinner_style="bold blue",
             ):
@@ -1006,7 +1012,8 @@ def tune(
             )
             try:
                 with logger.console.status(
-                    f"{'':7}Writing {object_alias.replace('_', ' ')} to file...",
+                    f"{'':7}Writing {object_alias.replace('_', ' ')} to file"
+                    "[yellow]...[/yellow]",
                     spinner="dots",
                     spinner_style="bold blue",
                 ):

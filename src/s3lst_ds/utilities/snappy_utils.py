@@ -89,20 +89,36 @@ def import_esa_snappy(logger: RichLogger | None = None) -> ModuleType:
 
         return esa_snappy
 
-    except ImportError as e:
+    except (ImportError, OSError) as e:
         if logger is not None:
             logger.error(
-                "[bold red]Error importing `esa_snappy` package."
+                "[bold red]This error is most likely caused by a failure in importing"
+                + " `esa_snappy` package."
                 + f"\nError message: {e}"
-                + "\nRequested utilities from the `esa_snappy` package are unavailable"
-                + " because the package is not installed in the uv environment."
-                + "\nRun `source scripts/install/install_snap.sh` to install it."
+                + "\nRequested utilities from the `esa_snappy` Python package may be"
+                + " unavailable because the package or the Java backend SNAP are not"
+                + " installed or, if installed, not configured."
+                + "\n"
+                + "\nRun `uv pip install esa-snappy` to install `esa-snappy`"
+                + " package, if missing."
+                + "\nRun `uv run s3lst-ds-install-snap` to install `SNAP` and"
+                + " configure it and `esa-snappy`, if `SNAP` is missing."
+                + "\nRun `uv run s3lst-ds-configure-snap` to configure `SNAP` and"
+                + " `esa-snappy`, if these are already installed."
                 + "[/bold red]",
             )
         raise ImportError(
-            "Error importing `esa_snappy` package."
+            "This error is most likely caused by a failure in importing  `esa_snappy`"
+            + " package."
             + f"\nError message: {e}"
-            + "\nRequested utilities from the `esa_snappy` package are unavailable"
-            + " because the package is not installed in the uv environment."
-            + "\nRun `source scripts/install/install_snap.sh` to install it."
+            + "\nRequested utilities from the `esa_snappy` Python package may be"
+            + " unavailable because the package or the Java backend `SNAP` are not"
+            + " installed or, if installed, not configured."
+            + "\n"
+            + "\nRun `uv pip install esa-snappy` to install `esa-snappy` package, if"
+            + " missing."
+            + "\nRun `uv run s3lst-ds-install-snap` to install SNAP and configure"
+            + " it and `esa-snappy`, if `SNAP` is missing."
+            + "\nRun `uv run s3lst-ds-configure-snap` to configure `SNAP` and"
+            + " `esa-snappy`, if these are already installed."
         )

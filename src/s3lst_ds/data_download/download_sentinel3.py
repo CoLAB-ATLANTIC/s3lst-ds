@@ -1094,6 +1094,7 @@ def download_products(
 
     # Create logger
     logger = RichLogger(
+        name="download",
         level=logging.INFO,
         file_path=(Path(config.out_dir) / "download_sentinel3.log"),
         file_mode="w",
@@ -1233,7 +1234,7 @@ def download_products(
     logger.console.print()  # type: ignore
 
     with logger.console.status(
-        f"{'':7}Querying Sentinel-3 LST products...",
+        f"{'':7}Querying Sentinel-3 LST products[yellow]...[/yellow]",
         spinner="dots",
         spinner_style="bold blue",
     ):
@@ -1343,9 +1344,14 @@ def download_products(
         )
 
     else:
+        # Get LST products notable info from query results
+        lst_infos = ProdInfo.load_from_df(lst_query)  # type: ignore
+
         logger.info(
             f"[bold green]{len(lst_query)} Sentinel-3 LST products have been found"
-            " in the query.[/bold green]"
+            + " in the query:[/bold green][green]\n"
+            + "\n".join([lst_info.name for lst_info in lst_infos])
+            + "[/green]"
         )
 
     # WARNING: For Open-Cosmos project only: consider solely the LST product that has
@@ -1397,17 +1403,12 @@ def download_products(
         # Select the first product
         lst_query = lst_query.iloc[[0]].reset_index(drop=True)
 
-    # Get LST products notable info from query results
-    lst_infos = ProdInfo.load_from_df(lst_query)  # type: ignore
-
     for lst_info in lst_infos:
         # ---> Query Sentinel-3 SYN products that accompany current LST product
         logger.console.print()  # type: ignore
 
         with logger.console.status(
-            f"{'':7}Querying Sentinel-3 SYN product for LST's"
-            + f"\n{'':9}[green]{lst_info.name!r}[/green]"
-            + f"\n{'':9}[yellow]...[/yellow]",
+            f"{'':7}Querying Sentinel-3 SYN product[yellow]...[/yellow]",
             spinner="dots",
             spinner_style="bold blue",
         ):
@@ -1665,9 +1666,9 @@ def download_products(
 
             if aoi is not None:
                 with logger.console.status(
-                    f"{'':7}Checking if for the LST product the cloud cover"
-                    + " fraction in the AOI is smaller than the issued limit ("
-                    + f"{config.cloud_cover_max_aoi} %)[yellow]...[/yellow]",
+                    f"{'':7}Checking if AOI's cloud cover fraction in the LST product"
+                    + " is smaller than the configured[cyan]"
+                    + f" {config.cloud_cover_max_aoi}[/cyan] %[yellow]...[/yellow]",
                     spinner="dots",
                     spinner_style="bold blue",
                 ):
