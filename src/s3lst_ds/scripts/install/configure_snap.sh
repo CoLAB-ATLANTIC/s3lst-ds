@@ -6,7 +6,7 @@
 SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # ---> Get utility functions
-source "$SCRIPTS_DIR/utils.sh"
+source "$SCRIPTS_DIR/utils.sh" || return 1
 
 # Get the path to the python binary of the activated virtual environment
 PYTHON_BIN="$(python -c 'import sys; print(sys.executable)')"

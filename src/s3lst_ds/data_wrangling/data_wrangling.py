@@ -479,15 +479,22 @@ class DataWrangler:
 
     def get_metadata(
         self,
+        timestamps: pd.Timestamp | list[pd.Timestamp] | None = None,
         vars: str | list[str] | None = None,
     ) -> pd.Series | pd.DataFrame:
         """
-        Get values of metadata `vars` associated with wrangled data.
+        Get values of metadata `vars` associated with the timestamps `timestamps` of the
+        wrangled data.
 
-        Note that if `vars` is not issued, all metadata variables are returned.
+        Note that if `timestamps` or `vars` are not issued, the returned value
+        corresponds to the metadata of of all timestamps or metadata variables,
+        respectively.
 
         Parameters
         ----------
+        timestamps : pd.Timestamp or list[pd.Timestamp] or None, default=None
+            Timestamps associated with the metadata. If not issued, the metadata of all
+            timestamps is considered.
         vars : str or list[str] or None, default=None
             Variables of the metadata to return. If not issued, all metadata variables
             are returned.
@@ -496,11 +503,21 @@ class DataWrangler:
         -------
 
         metadata : pd.Series or pd.DataFrame
-            Values of metadata `vars` associated with wrangled data. Note that if `vars`
-            is not issued, all metadata variables are returned.
+        Get values of metadata `vars` associated with the timestamps `timestamps` of the
+        wrangled data. Note that if `timestamps` or `vars` are not issued, the returned
+        value corresponds to the metadata of of all timestamps or metadata variables,
+        respectively.
         """
 
-        metadata = self.metadata[vars if vars is not None else self.metadata.columns]
+        metadata = (
+            self.metadata
+            if timestamps is None
+            else self.metadata[
+                self.metadata["timestamp"].isin(
+                    [timestamps] if isinstance(timestamps, pd.Timestamp) else timestamps
+                )
+            ]
+        )[vars if vars is not None else self.metadata.columns]
 
         return metadata
 

@@ -236,7 +236,7 @@ class DataBatcher:
                     # associated with pixels outside of the AOI become nan. One herein
                     # defines the batch variable to be nan when the timestamp variable
                     # also is.
-                    if not np.isnan(timestamp)
+                    if not pd.isna(timestamp)
                     else np.nan
                 ),
             ),

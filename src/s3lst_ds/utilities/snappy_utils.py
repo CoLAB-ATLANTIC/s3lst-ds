@@ -101,10 +101,9 @@ def import_esa_snappy(logger: RichLogger | None = None) -> ModuleType:
                 + "\n"
                 + "\nRun `uv pip install esa-snappy` to install `esa-snappy`"
                 + " package, if missing."
-                + "\nRun `uv run s3lst-ds-install-snap` to install `SNAP` and"
-                + " configure it and `esa-snappy`, if `SNAP` is missing."
-                + "\nRun `uv run s3lst-ds-configure-snap` to configure `SNAP` and"
-                + " `esa-snappy`, if these are already installed."
+                + "\nRun `uv run s3lst-ds-install-snap` to install and configure `SNAP`"
+                + " if it is missing, or to just configure it if it exists but it is"
+                + " not configured."
                 + "[/bold red]",
             )
         raise ImportError(
@@ -115,10 +114,9 @@ def import_esa_snappy(logger: RichLogger | None = None) -> ModuleType:
             + " unavailable because the package or the Java backend `SNAP` are not"
             + " installed or, if installed, not configured."
             + "\n"
-            + "\nRun `uv pip install esa-snappy` to install `esa-snappy` package, if"
-            + " missing."
-            + "\nRun `uv run s3lst-ds-install-snap` to install SNAP and configure"
-            + " it and `esa-snappy`, if `SNAP` is missing."
-            + "\nRun `uv run s3lst-ds-configure-snap` to configure `SNAP` and"
-            + " `esa-snappy`, if these are already installed."
+            + "\nRun `uv pip install esa-snappy` to install `esa-snappy`"
+            + " package, if missing."
+            + "\nRun `uv run s3lst-ds-install-snap` to install and configure `SNAP`"
+            + " if it is missing, or to just configure it if it exists but it is"
+            + " not configured."
         )

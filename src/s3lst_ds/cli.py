@@ -1,6 +1,7 @@
 import logging
 import stat
 import subprocess
+import sys
 from importlib.resources import files
 from pathlib import Path
 
@@ -106,15 +107,24 @@ def unset_cdse() -> None:
 
 def install_snap() -> None:
     """
-    (Re)install SNAP dependencies and configure snappy by running the installation
-    script `scripts/install/install_snap.sh`.
+    Install SNAP dependencies if not already installed and configure snappy by running
+    the installation script `scripts/install/install_snap.sh`. Note that if SNAP is
+    already installed and the flag `--force` is provided, SNAP will be reinstalled.
     """
+
     # Path to latex installation script
     script = files("s3lst_ds").joinpath("scripts/install/install_snap.sh")
+
     # Run script
     subprocess.run(
         # Command arguments
-        ["bash", str(script)],
+        [
+            "bash",
+            "-c",
+            f'source "{script}" "$@"',
+            "install_snap",
+            *sys.argv[1:],
+        ],
         # Raise error if the command fails
         check=True,
     )
@@ -130,7 +140,11 @@ def uninstall_snap() -> None:
     # Run script
     subprocess.run(
         # Command arguments
-        ["bash", str(script)],
+        [
+            "bash",
+            "-c",
+            f'source "{script}"',
+        ],
         # Raise error if the command fails
         check=True,
     )
@@ -146,7 +160,11 @@ def configure_snap() -> None:
     # Run script
     subprocess.run(
         # Command arguments
-        ["bash", str(script)],
+        [
+            "bash",
+            "-c",
+            f'source "{script}"',
+        ],
         # Raise error if the command fails
         check=True,
     )

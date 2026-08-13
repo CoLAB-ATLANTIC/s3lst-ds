@@ -494,6 +494,7 @@ def get_objective(
 # regarded as a dict object at runtime.
 class TuneOut(TypedDict, total=False):
     downscaler: Downscaler | Path
+    params: dict[str, Any]
     score: dict[str, dict[str, dict[str, dict[str, float]]]] | Path
     data_batcher: DataBatcher | Path
 
@@ -559,6 +560,9 @@ def tune(
         - downscaler: Downscaler or Path
             The tuned downscaler (if `config.path_out` is not issued) or a path to the
             respective Joblib file.
+        - params: dict[str, Any]
+            The tuned hyperparameters of the downscaler (fixed hyperparameters are
+            disregarded here).
         - score: dict[str, dict[str, dict[str, dict[str, float]]]] or Path
             Cross-validation, training and test scores either as a dictionary (if
             `config.path_out` is not issued) or as a path to the respective JSON file.
@@ -747,6 +751,7 @@ def tune(
     # Parse indicators for outputting variables
     out = {
         "downscaler": True,
+        "params": True,
         "score": True,
         "data_batcher": config.out_data_batcher,
     }
@@ -756,7 +761,14 @@ def tune(
         object_alias: (
             (
                 config.path_out
-                / (object_alias + (".joblib" if object_alias != "score" else ".json"))
+                / (
+                    object_alias
+                    + (
+                        ".joblib"
+                        if object_alias not in ["params", "score"]
+                        else ".json"
+                    )
+                )
             )
             if config.path_out is not None and out[object_alias] is True
             else None
@@ -866,7 +878,7 @@ def tune(
         # Set base model processors to 1 during tuning to not impair the process (as
         # multiple processes may already be used by the tuner itself)
         if "base_model__n_jobs" in downscaler.get_params():
-            base_model__n_jobs = downscaler.base_model__n_jobs  # type: ignore
+            base_model__n_jobs = downscaler.base_model.n_jobs  # type: ignore
             downscaler.set_params(base_model__n_jobs=1)
 
         # Define optimization task
@@ -999,6 +1011,7 @@ def tune(
 
     object = {
         "downscaler": downscaler,
+        "params": best_params,
         "score": score,
         "data_batcher": data_batcher,
     }
@@ -1017,7 +1030,7 @@ def tune(
                     spinner="dots",
                     spinner_style="bold blue",
                 ):
-                    if object_alias == "score":
+                    if object_alias in ["params", "score"]:
                         pd.Series(object[object_alias]).to_json(
                             path_out[object_alias]  # type: ignore
                         )
