@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Literal
+from typing import ClassVar, Literal
 
 from rich import get_console
 from rich.console import Console, RenderableType
@@ -61,7 +61,31 @@ class RichLogger:
 
     console: Console
         The Rich console (regardless of the handler being set or not).
+
+    Attributes
+    ----------
+    level_mapper : dict[int or str or None, int or None]
+        Class-level mapping between logging level aliases and their corresponding
+        numeric levels. Numeric levels are mapped to themselves, logging level names are
+        mapped to their corresponding numeric levels, and `None` is mapped to `None`.
     """
+
+    # Mapper between logging level aliases and their corresponding values
+    level_mapper: ClassVar[dict[int | str | None, int | None]] = {
+        0: 0,
+        10: 10,
+        20: 20,
+        30: 30,
+        40: 40,
+        50: 50,
+        "notset": 0,
+        "debug": 10,
+        "info": 20,
+        "warning": 30,
+        "error": 40,
+        "critical": 50,
+        None: None,
+    }
 
     def __init__(
         self,
@@ -90,7 +114,8 @@ class RichLogger:
             not issued, the base root logger (called `"root"`) is used. Note that the
             base root logger always exists.
 
-        level : {50, 40, 30, 20, 10, 0, None}, default=None
+        level : {50, 40, 30, 20, 10, 0, "critical", "error", "warning", "info", "debug",
+            "notset", None}, default=None
             Minimum [logging
             level](https://docs.python.org/3/library/logging.html#logging-levels) (e.g.
             `logging.INFO` (`20`)) to set. Regardless of whether the base logger already
@@ -100,7 +125,15 @@ class RichLogger:
             include less important one). Note that if `level` is not issued, the level
             of the base logger defaults to the one of root (`logging.WARNING` (`30`) if
             the level of root was not changed) in case of base logger creation or to the
-            level of an already existing base logger in case of reuse.
+            level of an already existing base logger in case of reuse. The logging
+            levels are as follows (from the least to the most important):
+
+            - `logging.NOTSET`, `0`, `"notset"`;
+            - `logging.DEBUG`, `10`, `"debug"`;
+            - `logging.INFO`, `20`, `"info"`;
+            - `logging.WARNING`, `30`, `"warning"`;
+            - `logging.ERROR`, `40`, `"error"`;
+            - `logging.CRITICAL`, `50`, `"critical"`.
 
         console: Console or None, default=None
             A Rich console object to use for console logging. Regardless of whether the
@@ -353,11 +386,20 @@ class RichLogger:
 
         Parameters
         ----------
-        level : {50, 40, 30, 20, 10, 0, None}
-            The minimum logging level to set in the base logger.
+        level : {50, 40, 30, 20, 10, 0, "critical", "error", "warning", "info", "debug",
+            "notset", None}
+            The minimum logging level to set in the base logger. Note that an integer,
+            string or `None` can be issued. The logging levels are as follows (from the
+            least to the most important):
+
+            - `logging.NOTSET`, `0`, `"notset"`;
+            - `logging.DEBUG`, `10`, `"debug"`;
+            - `logging.INFO`, `20`, `"info"`;
+            - `logging.WARNING`, `30`, `"warning"`;
+            - `logging.ERROR`, `40`, `"error"`;
+            - `logging.CRITICAL`, `50`, `"critical"`.
         """
-        if level is not None:
-            self.base_logger.setLevel(level)
+        self.base_logger.setLevel(self.level_mapper[level])  # type: ignore
 
     @log_mode.setter
     def log_mode(self, log_mode: Literal["console", "file", "both"] | None) -> None:

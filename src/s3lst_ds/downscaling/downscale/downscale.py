@@ -230,16 +230,12 @@ def downscale(
     )
 
     # Parse path to Landsat data
-    # NOTE: Landsat data will be solely used in coarse and fine-scoring if `score` is
-    # `True` and if it was issued or already contained in an issued data wrangler.
+    # NOTE: Landsat data will be solely wrangled if it was issued or already contained
+    # in an issued data wrangler.
     data_wrangler_path_landsat = (
-        (
-            data_wrangler.path_landsat
-            if config.data_wrangler is not None
-            else config.data_wrangler_path_landsat
-        )
-        if config.score is True
-        else None
+        data_wrangler.path_landsat
+        if config.data_wrangler is not None
+        else config.data_wrangler_path_landsat
     )
 
     # Parse data wrangling variables

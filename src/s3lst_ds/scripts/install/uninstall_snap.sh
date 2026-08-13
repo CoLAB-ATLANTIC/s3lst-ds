@@ -6,7 +6,7 @@
 SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # ---> Get utility functions
-source "$SCRIPTS_DIR/utils.sh"
+source "$SCRIPTS_DIR/utils.sh" || return 1
 
 # ---> Uninstall SNAP dependencies
 info "Removing SNAP main installation directory (esa-snap)..."
