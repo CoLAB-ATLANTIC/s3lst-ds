@@ -66,7 +66,8 @@ else
     SNAP_IS_INSTALLED=0
 fi
 
-# Do nothing if SNAP is already installed and the `--force` flag is not provided
+# Do not install and solely configure if SNAP is already installed and the `--force`
+# flag is not provided
 if [ "$SNAP_IS_INSTALLED" -eq 1 ] && [ "$FORCE" -eq 0 ]; then
     warn "SNAP is already installed and --force flag is not provided. Skipping reinstallation..."
 # Uninstall SNAP dependencies if SNAP is already installed and the `--force` flag is
@@ -78,8 +79,8 @@ elif [ "$SNAP_IS_INSTALLED" -eq 1 ] && [ "$FORCE" -eq 1 ]; then
 fi
 
 
-# ---> Download and install SNAP and configure snappy to use the former if SNAP is not
-# already installed or if the `--force` flag is provided
+# ---> Download and install SNAP if SNAP is not already installed or if the `--force`
+# flag is provided
 if [ "$SNAP_IS_INSTALLED" -eq 0 ] || [ "$FORCE" -eq 1 ]; then
 
     # Change to install directory to download SNAP to it
@@ -150,8 +151,8 @@ if [ "$SNAP_IS_INSTALLED" -eq 0 ] || [ "$FORCE" -eq 1 ]; then
 
     # Change to original working directory
     cd "$WORKING_DIR"
-
-    # ---> Configure snappy
-    source "$SCRIPTS_DIR/install/configure_snap.sh" || return 1
-
 fi
+
+# ---> Configure snappy
+source "$SCRIPTS_DIR/install/configure_snap.sh" || return 1
+

@@ -90,7 +90,21 @@ class RichLogger:
     def __init__(
         self,
         name: str | None = None,
-        level: Literal[50, 40, 30, 20, 10, 0] | None = None,
+        level: Literal[
+            50,
+            40,
+            30,
+            20,
+            10,
+            0,
+            "critical",
+            "error",
+            "warning",
+            "info",
+            "debug",
+            "notset",
+        ]
+        | None = None,
         console: Console | None = None,
         file_path: Path | None = None,
         file_mode: str = "w",
@@ -378,7 +392,24 @@ class RichLogger:
         return file_handler_modes
 
     @level.setter
-    def level(self, level: Literal[50, 40, 30, 20, 10, 0] | None) -> None:
+    def level(
+        self,
+        level: Literal[
+            50,
+            40,
+            30,
+            20,
+            10,
+            0,
+            "critical",
+            "error",
+            "warning",
+            "info",
+            "debug",
+            "notset",
+        ]
+        | None,
+    ) -> None:
         """
         Set the minimum [logging
         level](https://docs.python.org/3/library/logging.html#logging-levels) of the
