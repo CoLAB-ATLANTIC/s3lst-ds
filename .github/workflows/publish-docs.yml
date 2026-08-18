@@ -50,7 +50,7 @@ jobs:
 
       # Create venv with docs dependency group
       - name: Create virtual environment with uv
-        run: uv sync --docs --locked
+        run: uv sync --group=docs --locked
 
       # Deploy to GitHub Pages using MkDocs
       - name: Deploy documentation to GitHub Pages
