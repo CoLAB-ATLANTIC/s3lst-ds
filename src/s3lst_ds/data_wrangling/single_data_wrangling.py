@@ -22,7 +22,7 @@ class SingleDataWrangler:
     A class for wrangling Sentinel-3, spatial predictor, AOI and and possibly validation
     Landsat data associated with a single sensing timestamp.
 
-    Parameters
+    Attributes
     ----------
 
     data_vars : DataVars

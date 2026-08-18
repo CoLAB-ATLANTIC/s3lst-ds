@@ -63,34 +63,34 @@ package in your project, you would need:
 - Install the latest stable release from [PyPI](https://pypi.org/project/s3lst-ds/) in
   the activated virtual environment using [`uv`](https://docs.astral.sh/uv/):
 
-  ```bash
-  uv add s3lst-ds
-  ```
+    ```bash
+    uv add s3lst-ds
+    ```
 
 ### 2. Set CDSE credentials
 
 - Safely set your [CDSE](https://dataspace.copernicus.eu/) credentials as environment
   variables of the system:
 
-  ```bash
-  uv run s3lst-ds-set-cdse
-  ```
+    ```bash
+    uv run s3lst-ds-set-cdse
+    ```
 
 ### 3. Install [`esa-snappy`](https://github.com/senbox-org/esa-snappy) (optional)
 
 - Install [`esa-snappy`](https://github.com/senbox-org/esa-snappy) Python package using
   `uv`:
 
-  ```bash
-  uv add s3lst-ds[snap]
-  ```
+    ```bash
+    uv add s3lst-ds[snap]
+    ```
 
 - Install the backend [`SNAP`](https://earth.esa.int/eogateway/tools/snap) Java package
   (if not already installed) and subsequently configure it using `uv`:
 
-  ```bash
-  uv run s3lst-ds-install-snap
-  ```
+    ```bash
+    uv run s3lst-ds-install-snap
+    ```
 
 > [!NOTE]
 >
@@ -129,8 +129,6 @@ package in your project, you would need:
 > ```bash
 > uv run s3lst-ds-uninstall-snap
 > ```
-
-> [!WARNING]
 >
 > #### `SNAP`'s memory limit
 >
@@ -165,8 +163,9 @@ and locally run them.
 
 If you are a project maintainer, please read
 [RELEASING.md](https://github.com/CoLAB-ATLANTIC/s3lst-ds/blob/main/RELEASING.md) to
-know how to build and publish the package to [PyPI](https://pypi.org/) and to create
-[GitHub releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
+know how to build and publish the package to [PyPI](https://pypi.org/), create [GitHub
+releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
+and publish the documentation to [GitHub Pages](https://docs.github.com/en/pages)
 after successful merge pull requests.
 
 ## Citation

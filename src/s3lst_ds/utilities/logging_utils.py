@@ -15,7 +15,7 @@ class RichLogger:
     A `logging.Logger`-based class that uses a Rich console and that may also write to
     file.
 
-    Parameters
+    Attributes
     ----------
 
     name : str, default="root"

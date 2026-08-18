@@ -57,7 +57,7 @@ class Sentinel3Config:
     querying items is with respect to start sensing time in ascending order (oldest to
     newest).
 
-    Parameters
+    Attributes
     ----------
 
     out_dir : Path

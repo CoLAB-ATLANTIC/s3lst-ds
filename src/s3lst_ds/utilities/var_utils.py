@@ -7,27 +7,24 @@ class DataVars:
     """
     Class with aliases and units for predictors and target and their kinds.
 
-    Class parameters
-    ----------------
+    Attributes
+    ----------
     alias_fancy : dict[str, str]
-        Mapper between variable aliases and their fancy counterparts.
+        Class attribute: mapper between variable aliases and their fancy counterparts.
 
     units_fancy : dict[str, str]
-        Mapper between variable aliases and their fancy units.
-
-    Base Parameters
-    ---------------
+        Class attribute: mapper between variable aliases and their fancy units.
 
     X_xt : list[str]
-        Aliases of the spatio-temporal predictors. Default corresponds to a list
-        containing:
+        Base attribute: aliases of the spatio-temporal predictors. Default corresponds
+        to a list containing:
             - `"NDVI"`
             - `"FVC"`
             - `"NDWI"`
 
     X_x : list[str]
-        Aliases of the pure spatial predictors. Default corresponds to a list
-        containing:
+        Base attribute: aliases of the pure spatial predictors. Default corresponds to a
+        list containing:
             - `"TCD"`
             - `"DEM"`
             - `"IMD"`
@@ -37,51 +34,51 @@ class DataVars:
             - `"UD"`
 
     X_t : list[str]
-        Aliases of the pure temporal predictors. Default corresponds to a list
-        containing:
+        Base attribute: aliases of the pure temporal predictors. Default corresponds to
+        a list containing:
             - `"timestamp"`
             - `"season"`
 
     X_cat : list[str]
-        Aliases of the categorical predictors. Default corresponds to a list containing:
+        Base attribute: aliases of the categorical predictors. Default corresponds to a
+        list containing:
             - `"LCZ"`,
             - `"timestamp"`,
             - `"season"`.
 
     y : str
-        Alias of the target variable. Default corresponds to `"LST"`.
+        Base attribute: alias of the target variable. Default corresponds to `"LST"`.
 
     y_val : str
-        Alias of the validating target variable. Default corresponds to `"LST_landsat"`.
-
-    Derived Parameters
-    ------------------
+        Base attribute: alias of the validating target variable. Default corresponds to
+        `"LST_landsat"`.
 
     X_num : list[str]
-        Aliases of the numerical predictors.
+        Derived attribute: aliases of the numerical predictors.
 
     X : list[str]
-        Aliases of all predictors (numerical and categorical).
+        Derived attribute: aliases of all predictors (numerical and categorical).
 
     vars_xt : list[str]
-        Aliases of the spatio-temporal variables (spatio-temporal predictors and target
-        including the validating target).
+        Derived attribute: aliases of the spatio-temporal variables (spatio-temporal
+        predictors and target including the validating target).
 
     vars_x : list[str]
-        Aliases of the pure spatial variables (spatial predictors).
+        Derived attribute: aliases of the pure spatial variables (spatial predictors).
 
     vars_t : list[str]
-        Aliases of the pure temporal variables (temporal predictors).
+        Derived attribute: aliases of the pure temporal variables (temporal predictors).
 
     vars_num : list[str]
-        Aliases of the numerical variables (numerical predictors and target including
-        the validating target).
+        Derived attribute: aliases of the numerical variables (numerical predictors and
+        target, including the validating target).
 
     vars_cat : list[str]
-        Aliases of the categorical variables (categorical predictors).
+        Derived attribute: aliases of the categorical variables (categorical
+        predictors).
 
     vars : list[str]
-        Aliases of all variables (predictors and target).
+        Derived attribute: aliases of all variables (predictors and target).
     """
 
     alias_fancy: ClassVar[dict[str, str]] = {

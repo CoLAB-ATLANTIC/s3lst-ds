@@ -18,8 +18,9 @@ class Scaler(BaseEstimator, TransformerMixin):
     The scaler is a standard scaler, a min-max normalizer or an identity transformer (if
     no scaling is wanted).
 
-    Parameters
+    Attributes
     ----------
+
     cols_mask : list or np.ndarray, optional
         The column names of the masks to regard.
 
@@ -289,8 +290,9 @@ class Encoder(BaseEstimator, TransformerMixin):
     such issue, a decoder of the nan encodings is considered to transform them into nan
     entries and to drop the redundant column associated with the nan category.
 
-    Parameters
+    Attributes
     ----------
+
     cols_mask : list or np.ndarray, optional
         The column names of the masks to regard.
 
@@ -550,7 +552,7 @@ class LassoNumPredictorSelector(BaseEstimator, TransformerMixin):
     Non-encoded categorical predictors are, therefore, not considered by the Lasso
     regression model.
 
-    Parameters
+    Attributes
     ----------
 
     lasso_sel : bool, default=True
@@ -828,8 +830,9 @@ class VariableSelector(BaseEstimator, TransformerMixin):
     """
     A transformer that selects a subset of columns from the input DataFrame.
 
-    Parameters
+    Attributes
     ----------
+
     cols : list of str
         The columns to select.
     output : {"pandas"}, default="pandas"
@@ -916,7 +919,7 @@ class IdentityTransformer(BaseEstimator, TransformerMixin):
     A transformer that does not perform any transformation, that is, it returns the
     input as it is.
 
-    Parameters
+    Attributes
     ----------
 
     output : {"pandas"}, default="pandas"
@@ -993,7 +996,7 @@ class ColumnPrefixDropper(BaseEstimator, TransformerMixin):
     A transformer for dropping prefixes ending with double underscore (`"__"`) from the
     names of the columns of a given DataFrame.
 
-    Parameters
+    Attributes
     ----------
 
     output : {"pandas"}, default="pandas"
@@ -1073,8 +1076,9 @@ class ColumnDropper(BaseEstimator, TransformerMixin):
     A transformer for dropping specified columns from a given DataFrame. Such columns
     are dropped based on their prefixes with exceptions based on their suffixes.
 
-    Parameters
+    Attributes
     ----------
+
     cols_drop_prefixes : list[str]
         The prefixes of the columns to be dropped except if their suffixes are in
         `cols_exception_suffixes`. If the respective initialization parameter was not
@@ -1183,9 +1187,9 @@ class ColumnReorderer(BaseEstimator, TransformerMixin):
     """
     A transformer for reordering and relocating specified columns of a given DataFrame.
 
-
-    Parameters
+    Attributes
     ----------
+
     cols_ref : list
         The (wanted) order of the column names.
 
@@ -1303,7 +1307,7 @@ class NanOneHotDecoder(BaseEstimator, TransformerMixin):
     behaviour taken by sklearn's OneHotEncoder, which by default, regards `np.nan` as a
     possible category.
 
-    Parameters
+    Attributes
     ----------
 
     output : {"pandas"}, default="pandas"
@@ -1413,7 +1417,7 @@ class FirstCategoryDropper(BaseEstimator, TransformerMixin):
     taken by sklearn's OneHotEncoder. The dropper further assumes that the category
     names do not have any underscore ("_") in it.
 
-    Parameters
+    Attributes
     ----------
 
     output : {"pandas"}, default="pandas"
@@ -1518,8 +1522,9 @@ class DownscalerPreprocessor(BaseEstimator, TransformerMixin):
 
     This transformer encompasses the transformations through an sklearn `Pipeline`.
 
-    Parameters
+    Attributes
     ----------
+
     cols_X : list or np.ndarray,
         The column names of the predictors to regard.
 

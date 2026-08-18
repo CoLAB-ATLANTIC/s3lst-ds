@@ -28,7 +28,7 @@ class CDSEAuthState:
     time of last access token generation) and obtaining a valid access token (through
     generation, refresh or regeneration).
 
-    Parameters
+    Attributes
     ----------
     username : str
         User mail for accessing CDSE (only required for access token generation).

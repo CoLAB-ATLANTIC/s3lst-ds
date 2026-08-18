@@ -22,7 +22,7 @@ class DataBatcher:
     `var_cross_val_strat` is not `None`) and considering `rnd_seed` as random seed
     number.
 
-    Parameters
+    Attributes
     ----------
 
     data_wrangler : DataWrangler
@@ -853,12 +853,7 @@ class DataBatcher:
         Parameters
         ----------
 
-        values: dict[pd.Timestamp, pd.Series or pd.DataFrame] or dict[str,
-        dict[pd.Timestamp, pd.Series or pd.DataFrame]] or dict[pd.Timestamp,
-        dict[{"coarse", "fine"}, pd.Series or pd.DataFrame]] or dict[
-            str, dict[pd.Timestamp, dict[{"coarse", "fine"}, pd.Series or
-            pd.DataFrame]]]
-        ]
+        values: dict[pd.Timestamp, pd.Series or pd.DataFrame] or dict[str, dict[pd.Timestamp, pd.Series or pd.DataFrame]] or dict[pd.Timestamp, dict[{"coarse", "fine"}, pd.Series or pd.DataFrame]] or dict[str, dict[pd.Timestamp, dict[{"coarse", "fine"}, pd.Series or pd.DataFrame]]]]
             Values to set.
 
         vars : str or list[str] or None, default=None

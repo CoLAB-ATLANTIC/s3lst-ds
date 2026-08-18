@@ -1,14 +1,11 @@
 # Releasing
 
-This document is intended for project maintainers
+This page is intended for project maintainers
 ([@armkhudinyan](https://github.com/armkhudinyan) and
-[@eliocp](https://github.com/eliocp)). The document describes how, after successful
-merge pull requests, the maintainer may:
-
-- build the package and publish it to [PyPI](https://pypi.org/).
-- create [GitHub
-  releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository).
-- deploy the documentation to [GitHub Pages](https://docs.github.com/en/pages).
+[@eliocp](https://github.com/eliocp)). It describes how the package may be built and
+published to [PyPI](https://pypi.org/) and how [GitHub
+releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
+may be created after successful merge pull requests.
 
 ## Requirements
 

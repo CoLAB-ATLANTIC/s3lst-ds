@@ -1,0 +1,57 @@
+# NOTE: the present workflow is based on Material for MkDocs's official documentation
+# (https://squidfunk.github.io/mkdocs-material/publishing-your-site/#with-github-actions).
+
+name: Publish Documentation to GitHub Pages
+# Workflow trigger events
+# NOTE: to know all possible events, check
+# https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
+on:
+  # Trigger the workflow on commit tag pushes whose tags are associated with a semantic
+  # versioning (semver) pattern (that is, starting with "v", e.g., v1.0.0, v1.5.0-rc.1,
+  # v2.0.0-alpha.1, etc.)
+  # NOTE:
+  # https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#push
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy:
+    name: Publish documentation
+    runs-on: ubuntu-latest
+    # Modify default permissions of the GITHUB_TOKEN (this is a secret that is created
+    # by GitHub for each workflow run and is used for authentication)
+    # NOTE:
+    # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions
+    permissions:
+      contents: write
+
+    # Steps to execute in the job
+    steps:
+      # Use GitHub Action Checkout to clone repo into the runner workspace
+      # NOTE: https://github.com/actions/checkout#checkout-v4
+      - name: Clone repo into runner workspace
+        uses: actions/checkout@v7
+        with:
+          # Do not persist the GitHub token credentials to the runner workspace so that
+          # the runner workspace cannot use them for other token-required operations
+          # such as pushing. This is recommended for security reasons.
+          # NOTE: https://github.com/actions/checkout/issues/485
+          persist-credentials: false
+
+      # Install uv in the runner workspace
+      # NOTE: https://github.com/marketplace/actions/astral-sh-setup-uv
+      # NOTE: by default, uses python version specified in pyproject.toml
+      # (https://github.com/marketplace/actions/astral-sh-setup-uv#python-version)
+      - name: Install uv in the runner workspace and add it to PATH
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          enable-cache: true
+
+      # Create venv with docs dependency group
+      - name: Create virtual environment with uv
+        run: uv sync --docs --locked
+
+      # Deploy to GitHub Pages using MkDocs
+      - name: Deploy documentation to GitHub Pages
+        run: uv run mkdocs gh-deploy --force

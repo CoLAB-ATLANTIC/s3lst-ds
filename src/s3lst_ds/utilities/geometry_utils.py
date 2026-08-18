@@ -47,7 +47,7 @@ def _load_from_path(path: Path) -> gpd.GeoDataFrame:
 
     # Vector-file case (GeoJSON, Shp, GPKG, etc.)
     if ext in {".shp", ".gpkg", ".geojson", ".json"}:
-        return gpd.read_file(path)
+        return gpd.read_file(path).to_crs(epsg=4326)
 
     # Otherwise assume text-based file containing WKT
     try:
