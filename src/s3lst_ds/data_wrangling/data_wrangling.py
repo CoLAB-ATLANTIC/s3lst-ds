@@ -101,7 +101,7 @@ class DataWrangler:
     A class for wrangling Sentinel-3, spatial predictor, AOI and and possibly validation
     Landsat data associated with multiple timestamps.
 
-    Parameters
+    Attributes
     ----------
 
     data_vars : DataVars
@@ -946,8 +946,7 @@ class DataWrangler:
         Parameters
         ----------
 
-        values : dict[pd.Timestamp, pd.Series or pd.DataFrame] or dict[pd.Timestamp,
-        dict[{"coarse", "fine"}, pd.Series or pd.DataFrame]]
+        values : dict[pd.Timestamp, pd.Series or pd.DataFrame] or dict[pd.Timestamp, dict[{"coarse", "fine"}, pd.Series or pd.DataFrame]]
             Values to set.
 
         vars : str or list[str] or None, default=None

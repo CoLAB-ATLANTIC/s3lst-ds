@@ -25,7 +25,7 @@ class DownscalerRegressor(BaseEstimator, RegressorMixin):
     fitting/predicting. This regressor is to be trained with coarse data. It predicts
     either coarse or fine target with either coarse or fine predictors, respectively.
 
-    Parameters
+    Attributes
     ----------
 
     base_model : Regressor

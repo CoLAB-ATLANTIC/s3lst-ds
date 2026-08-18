@@ -76,8 +76,9 @@ class Sen3Processor:
     - write to NetCDF file;
     - delete original file.
 
-    Parameters
+    Attributes
     ----------
+
     engine : {"rioxarray", "snappy"}, default="rioxarray"
         The alias of the backend Python package to use in the processing of the
         Sentinel-3 products. This is either
@@ -644,8 +645,9 @@ class ProdInfo:
     """
     Simple data class to hold particular product info obtained from query results.
 
-    Parameters
+    Attributes
     ----------
+
     id : str
         Product Id (to be used for performing download through the API).
 

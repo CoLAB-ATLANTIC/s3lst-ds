@@ -21,7 +21,7 @@ class DownscalerEstimator(BaseEstimator, RegressorMixin):
     predicts targets using preprocessed predictors (coarse or fine). It is trained with
     coarse data.
 
-    Parameters
+    Attributes
     ----------
 
     base_model : Regressor

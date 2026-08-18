@@ -1,7 +1,6 @@
 # Contributing
 
-This document is intended for project developers. The document describes the development
-workflow.
+This page is intended for project developers. It describes the development workflow.
 
 ## Requirements
 

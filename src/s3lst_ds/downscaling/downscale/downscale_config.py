@@ -19,7 +19,7 @@ class DownscaleConfig:
     the inference timestamps with the model as well as scoring the downscaler and
     returning or writing the results to files.
 
-    Parameters
+    Attributes
     ----------
 
     data_wrangler : DataWrangler or Path or None, default=None

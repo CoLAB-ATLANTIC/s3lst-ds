@@ -139,7 +139,7 @@ class TuneConfig:
     computed score corresponds to the RMSE of the standardized target, which is
     unitless.
 
-    Parameters
+    Attributes
     ----------
 
     data_batcher : DataBatcher or Path or None, default=None

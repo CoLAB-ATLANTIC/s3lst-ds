@@ -14,8 +14,9 @@ class LCZBase:
     2020 work (doi: 10.1016/j.mex.2020.101150). The map between codes and colors is
     based on the QGIS standard.
 
-    Parameters
+    Attributes
     ----------
+
     path_mapper : Path
         Path to CSV mapper file with the LCZ attributes.
 
@@ -62,12 +63,12 @@ class LCZBase:
         Get DataFrame mapper between LCZ codes, labels, descriptions, colors and
         indexes.
 
-        Parameters:
+        Parameters
         ----------
         cls : type
             An `LCZ` class.
 
-        Returns:
+        Returns
         -------
         mapper : pd.DataFrame
             The mapper.
@@ -92,12 +93,12 @@ class LCZBase:
         """
         Get unique values of LCZ's DataFrame `mapper` variables.
 
-        Parameters:
+        Parameters
         ----------
         cls : type
             An `LCZ` class.
 
-        Returns:
+        Returns
         -------
         values : dict[str, list]
             A dictionary of lists of unique values of LCZ's DataFrame `mapper`
@@ -126,7 +127,7 @@ class LCZBase:
             - `"color"`;
             - `"index"`.
 
-        Parameters:
+        Parameters
         ----------
         cls : type
             A `LCZ` class.
@@ -137,7 +138,7 @@ class LCZBase:
         target : str
             The variable to convert the `values` into.
 
-        Returns:
+        Returns
         -------
         converted_values : pd.Series
             The respective converted values.

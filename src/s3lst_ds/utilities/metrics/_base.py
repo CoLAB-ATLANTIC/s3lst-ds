@@ -16,8 +16,9 @@ class Scorer:
     determining the appropriate methods for extracting the optimum value and its index
     from an array-like of scores (`max`/`min` and `argmax`/`argmin`).
 
-    Parameters
+    Attributes
     ----------
+
     alias : str
         An alias for the scorer.
 

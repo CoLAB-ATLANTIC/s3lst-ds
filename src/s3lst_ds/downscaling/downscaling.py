@@ -27,13 +27,14 @@ from s3lst_ds.utilities.xr_utils import selective_reproject_match
 
 class Downscaler(BaseEstimator, RegressorMixin):
     """
-    A downscaling model that employs the "Residuals Downscaling" method: the fine target
-    is estimated by a `DownscalerEstimator` from fine predictors and masks and corrected
-    with the finely-resampled residual associated with the prediction of coarse target
-    from coarse predictors and masks.
+    A downscaling model that employs the a scale-invariance-based approach with residual
+    correction: the fine target is estimated by a `DownscalerEstimator` from fine
+    predictors and masks and corrected with the finely-resampled residual associated
+    with the prediction of coarse target from coarse predictors and masks.
 
-    Parameters
+    Attributes
     ----------
+
     base_model : Regressor
         The general (i.e. non-pixel-wise) base model to be fitted with coarse data.
 
@@ -110,6 +111,7 @@ class Downscaler(BaseEstimator, RegressorMixin):
 
     show_progress : bool, default=True
         `True` to display the downscaling progress.
+
     """
 
     def __init__(
@@ -667,8 +669,7 @@ class Downscaler(BaseEstimator, RegressorMixin):
             for the prediction of the coarse raw target (from coarse predictors and
             masks, `X_and_mask_coarse`).
 
-        X_and_mask_coarse : dict[pd.Timestamp, np.ndarray or pd.DataFrame] or None,
-        default=None
+        X_and_mask_coarse : dict[pd.Timestamp, np.ndarray or pd.DataFrame] or None, default=None
             Coarse predictors and masks for each image, keyed by timestamp. It must be
             issued if `correct` is `True`.
 
@@ -676,13 +677,11 @@ class Downscaler(BaseEstimator, RegressorMixin):
             The "true" coarse raw target, keyed by timestamp. It must be issued if
             `correct` is `True` or if `transform` is not `None`.
 
-        coords_coarse : dict[pd.Timestamp, xarray.core.coordinates.Coordinates] or None,
-        default=None
+        coords_coarse : dict[pd.Timestamp, xarray.core.coordinates.Coordinates] or None, default=None
             The coordinates of the coarse mesh for each image, keyed by timestamp. It
             must be issued if `correct` is `True`.
 
-        coords_fine : dict[pd.Timestamp, xarray.core.coordinates.Coordinates] or None,
-        default=None
+        coords_fine : dict[pd.Timestamp, xarray.core.coordinates.Coordinates] or None, default=None
             The coordinates of the fine mesh for each image, keyed by timestamp. It must
             be issued if `correct` or `gridded` are `True`.
 
@@ -862,8 +861,7 @@ class Downscaler(BaseEstimator, RegressorMixin):
             The "true" coarse raw target, keyed by timestamp. It must be issued if
             `transform` is not `None`.
 
-        coords_coarse : dict[pd.Timestamp, xarray.core.coordinates.Coordinates] or None,
-        default=None
+        coords_coarse : dict[pd.Timestamp, xarray.core.coordinates.Coordinates] or None, default=None
             The coordinates of the coarse mesh for each image, keyed by timestamp. It
             must be issued if `gridded` is `True`.
 
@@ -973,8 +971,7 @@ class Downscaler(BaseEstimator, RegressorMixin):
             `calibrate` are `True`.
 
 
-        scorers : list[str], default=["r2", "r2_oos", "rmse", "rmse_delta", "mae",
-        "mae_delta", "mbe"]
+        scorers : list[str], default=["r2", "r2_oos", "rmse", "rmse_delta", "mae", "mae_delta", "mbe"]
             Aliases of the scorers to consider.
 
         sample_weight : np.ndarray or pd.Series or None, default=None
@@ -1213,8 +1210,7 @@ class Downscaler(BaseEstimator, RegressorMixin):
             an attempt to account for discrepancies between source and validation
             platforms at a common coarse grid from the computed scores.
 
-        X_and_mask_coarse : dict[pd.Timestamp, np.ndarray or pd.DataFrame] or None,
-        default=None
+        X_and_mask_coarse : dict[pd.Timestamp, np.ndarray or pd.DataFrame] or None, default=None
             Coarse predictors and masks, keyed by timestamp. It must be issued if
             `correct` is `True`.
 
@@ -1222,13 +1218,11 @@ class Downscaler(BaseEstimator, RegressorMixin):
             The "true" coarse raw target, keyed by timestamp. It must be issued if
             `correct` or `calibrate` are `True` or if `transform` is not `None`.
 
-        coords_coarse : dict[pd.Timestamp, xarray.core.coordinates.Coordinates] or None,
-        default=None
+        coords_coarse : dict[pd.Timestamp, xarray.core.coordinates.Coordinates] or None, default=None
             The coordinates of the coarse mesh for each image, keyed by timestamp. It
             must be issued if `correct` or `calibrate` are `True`.
 
-        coords_fine : dict[pd.Timestamp, xarray.core.coordinates.Coordinates] or None,
-        default=None
+        coords_fine : dict[pd.Timestamp, xarray.core.coordinates.Coordinates] or None, default=None
             The coordinates of the fine mesh for each image, keyed by timestamp. It must
             be issued if `correct` or `calibrate` are `True`.
 
@@ -1236,12 +1230,10 @@ class Downscaler(BaseEstimator, RegressorMixin):
             Whether to compute scores for images individually (`False`) or combined
             (`True`).
 
-        scorers : list[str], default=["r2", "r2_oos", "rmse", "rmse_delta", "mae",
-        "mae_delta", "mbe"]
+        scorers : list[str], default=["r2", "r2_oos", "rmse", "rmse_delta", "mae", "mae_delta", "mbe"]
             Aliases of the scorers to consider.
 
-        sample_weight : dict[pd.Timestamp, np.ndarray or pd.Series] or None,
-        default=None
+        sample_weight : dict[pd.Timestamp, np.ndarray or pd.Series] or None, default=None
             Weight of each sample in the score, keyed by timestamp.
 
         Returns
@@ -1673,8 +1665,7 @@ class Downscaler(BaseEstimator, RegressorMixin):
             Whether to compute scores for images individually (`False`) or combined
             (`True`).
 
-        scorers : list[str], default=["r2", "r2_oos", "rmse", "rmse_delta", "mae",
-        "mae_delta", "mbe"]
+        scorers : list[str], default=["r2", "r2_oos", "rmse", "rmse_delta", "mae", "mae_delta", "mbe"]
             Aliases of the scorers to consider.
 
         sample_weight : dict[pd.Timestamp, np.ndarray or pd.Series] None, default=None

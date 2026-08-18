@@ -1,0 +1,223 @@
+# NOTE: Check https://www.mkdocs.org/user-guide/configuration/ to know more about this
+# file.
+# Main title of the project
+site_name: s3lst-ds
+# Project URL (to host the documentation)
+site_url: https://CoLAB-ATLANTIC.github.io/s3lst-ds
+# Project description
+site_description: Downscale Sentinel-3 LST data with a scale-invariance-based model.
+# Project author
+site_author: CoLAB +ATLANTIC
+
+# Repository URL
+# NOTE: this provides a link to the repository in each page of the documentation.
+repo_url: https://github.com/CoLAB-ATLANTIC/s3lst-ds
+
+# Exclude files from the documentation
+# NOTE: https://www.mkdocs.org/user-guide/configuration/#exclude_docs
+exclude_docs: |
+  /flowcharts
+  /images/graphic_abstract.png
+# Project theme
+theme:
+  # Name of the installed theme
+  name: material  # Material for MkDocs
+
+  features:
+    # Suggest in the search bar, enabling auto-complete with tab
+    # NOTE: https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/#search-suggestions
+    - search.suggest
+    # NOTE: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#anchor-tracking
+    - navigation.tracking
+    - navigation.top
+    # Copy button for code blocks
+    # NOTE: https://squidfunk.github.io/mkdocs-material/reference/code-blocks/
+    - content.code.copy
+
+  palette:
+    # Bright/dark mode
+    # NOTE: https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/#automatic-light-dark-mode
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      # Toggle button style
+      # NOTE: https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/#color-palette-toggle
+      toggle:
+        icon: material/brightness-auto
+        # Text to show when hovering toggle button
+        name: Switch to light mode
+      # Colors
+      primary: indigo
+      # NOTE: https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/#primary-color
+      accent: indigo
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default 
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+      primary: indigo
+      accent: indigo
+
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+      primary: indigo
+      accent: indigo
+
+# Paths (relative to /docs) to consider in the navigation pane
+# NOTE: https://www.mkdocs.org/user-guide/writing-your-docs/#configure-pages-and-navigation
+nav:
+  - About: index.md
+  - Installation: installation.md
+  - Usage: usage.md
+  - Contributing: contributing.md
+  - Releasing: releasing.md
+  - Citation: citation.md
+  - API Reference:
+    - Scripts:
+      - Download: api/scripts/data_download.md
+      - Downscale: api/scripts/downscale.md
+      - Tune: api/scripts/tune.md
+    - Data Reader: api/data_reader.md
+    - Data Wrangler: api/data_wrangler.md
+    - Data Batcher: api/data_batcher.md
+    - Downscalers: 
+      - Single-Timestamp Downscaler: api/downscalers/piecewise_downscaler.md
+      - Multi-Timestamp Downscaler: api/downscalers/downscaler.md
+    - Utilities:
+      - Variables: api/utilities/var_utils.md
+      - Metrics: api/utilities/metrics.md
+      - Local Climate Zones: api/utilities/lcz.md
+      - Geometries: api/utilities/geometry_utils.md
+      - CDSE: api/utilities/cdse_utils.md
+      - Snappy: api/utilities/snappy_utils.md
+      - Logging: api/utilities/logging_utils.md
+plugins:
+  # Search tab
+  # NOTE: https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/#built-in-search-plugin
+  - search
+  # Parse GitHub admonitions
+  # NOTE: https://github.com/PGijsbers/admonitions
+  - gh-admonitions
+  # To create documentation from docstrings in the Python source code
+  # NOTE: https://mkdocstrings.github.io/python/usage/#using-the-paths-option
+  - mkdocstrings:
+      handlers:
+        python:
+          # Relative path (from the parent of this very file) to Python project folder
+          paths: [src]
+          options:
+            heading_level: 2
+
+            # DOCSTRINGS -------------------------------------------------------------
+            docstring_options:
+              # Discard first line of `__init__` method docstrings,
+              # useful when merging such docstrings into their parent class'.
+              ignore_init_summary: true
+
+            # Docstring style
+            # NOTE: https://mkdocstrings.github.io/python/usage/configuration/docstrings/#docstring_style
+            # NOTE: https://numpydoc.readthedocs.io/en/latest/
+            docstring_style: "numpy"
+
+            # # Tables are generally too large, lists will fix this.
+            # docstring_section_style: list
+
+            # Enable cross-references in signatures.
+            # NOTE: this will create links to already documented objects.
+            signature_crossrefs: true
+
+            # Unwrap actual types from `Annotated` type annotations.
+            unwrap_annotated: true
+
+            # Show class inherited members.
+            # NOTE: this will show the methods of the parent classes in which the
+            # current one is based.
+            inherited_members: true
+
+            # Render auto-generated summaries of attributes, functions, etc.
+            # at the start of each symbol's documentation.
+            summary: true
+
+            # # Render headings for parameters, making them linkable.
+            # parameter_headings: true
+
+            # Always show the heading for the symbol you render with `::: id`.
+            show_root_heading: true
+
+            # # Only show the name of the symbols you inject render `::: id`.
+            # show_root_full_path: false
+
+            # Show the type of symbol (class, function, etc.) in the heading.
+            show_symbol_type_heading: true
+
+            # Show the type of symbol (class, function, etc.) in the table of contents.
+            show_symbol_type_toc: true
+
+            # Format code to 80 + 10% margin (Black and Ruff defaults)
+            # in signatures and attribute value code blocks.
+            # Needs Black/Ruff installed.
+            line_length: 88
+
+            # # Merge signature and docstring of `__init__` methods
+            # # into their parent class signature and docstring.
+            # merge_init_into_class: true
+
+            # Render signatures and attribute values in a separate code block,
+            # below the symbol heading.
+            separate_signature: true
+
+            # # Show type annotations in signatures.
+            # show_signature_annotations: true
+
+            # Show type parameters in signatures.
+            show_signature_type_parameters: true
+
+            # Show base classes OR inheritance diagram.
+            show_bases: true
+
+extra:
+  
+  # Set links in the footer
+  # https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/CoLAB-ATLANTIC/s3lst-ds
+      # Name shown when hovering
+      name: GitHub repository
+    - icon: fontawesome/solid/archive
+      link: https://zenodo.org/records/20863040
+      # Name shown when hovering
+      name: Zenodo repository
+    - icon: fontawesome/solid/book-open
+      link: https://www.mdpi.com/2072-4292/18/13/2263
+      # Name shown when hovering
+      name: Publication in Remote Sensing
+
+# NOTE: https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown-extensions/?h=markdown+extensions#python-markdown-extensions
+markdown_extensions:
+  # For automatic generation of tables of contents (TOC)
+  # NOTE: https://python-markdown.github.io/extensions/toc/
+  - toc
+  # NOTE:
+  # https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown/#admonition
+  - admonition
+  # Add content from external Markdown files
+  # NOTE: https://facelessuser.github.io/pymdown-extensions/extensions/snippets/#snippets
+  - pymdownx.snippets:
+      base_path: [!relative $config_dir]
+      check_paths: true
+  # Code block customization
+  # NOTE: https://squidfunk.github.io/mkdocs-material/reference/code-blocks/
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
