@@ -1703,7 +1703,7 @@ wheels = [
 
 [[package]]
 name = "s3lst-ds"
-version = "0.1.13"
+version = "0.1.14"
 source = { editable = "." }
 dependencies = [
     { name = "fastparquet" },

@@ -32,12 +32,6 @@ jobs:
       # NOTE: https://github.com/actions/checkout#checkout-v4
       - name: Clone repo into runner workspace
         uses: actions/checkout@v7
-        with:
-          # Do not persist the GitHub token credentials to the runner workspace so that
-          # the runner workspace cannot use them for other token-required operations
-          # such as pushing. This is recommended for security reasons.
-          # NOTE: https://github.com/actions/checkout/issues/485
-          persist-credentials: false
 
       # Install uv in the runner workspace
       # NOTE: https://github.com/marketplace/actions/astral-sh-setup-uv
