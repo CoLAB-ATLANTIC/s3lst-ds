@@ -91,7 +91,7 @@ To publish the package to PyPI and create a GitHub release, you would need:
 > | Beta pre-release  | v1.1.1-beta.1  |
 > | Release candidate | v1.1.1.-rc.1   |
 
-### Let GitHub Actions automatically build and publish the package to PyPI, and deploy the documentation to GitHub pages
+### Let GitHub Actions automatically build and publish the package to PyPI, and deploy the documentation to GitHub Pages
 
 - After pushing the tag, the package is automatically built and published to
   [PyPI](https://pypi.org/) by GitHub using workflow file

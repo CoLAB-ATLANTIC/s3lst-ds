@@ -150,7 +150,8 @@ package in your project, you would need:
 
 ## Documentation
 
-To be built.
+The full documentation is available at [GitHub
+Pages](https://colab-atlantic.github.io/s3lst-ds/).
 
 ## Contributing
 
