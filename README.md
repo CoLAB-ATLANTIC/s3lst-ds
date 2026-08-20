@@ -21,6 +21,7 @@ project. All GitHub-related badges may be found
 <!-- GitHub time of last commit: https://shields.io/badges/git-hub-last-commit -->
 
 <!-- ---------------------------- Other badges ----------------------------- -->
+<!-- Material for MkDocs: https://github.com/squidfunk/mkdocs-material/discussions/6375#discussioncomment-7838405 -->
 <!-- pre-commit usag: https://pre-commit.com/#badging-your-repository -->
 <!-- uv package and project manager usage: https://github.com/astral-sh/uv/pull/15075#issue-3291641128 -->
 <!-- Ruff linter and formatter usage: https://github.com/astral-sh/ruff/blob/main/README.md?plain=1 -->
@@ -33,6 +34,7 @@ project. All GitHub-related badges may be found
 ![PyPI Wheel](https://img.shields.io/pypi/wheel/s3lst-ds)
 ![PyPI Status](https://img.shields.io/pypi/status/s3lst-ds)
 ![GitHub last commit](https://img.shields.io/github/last-commit/CoLAB-ATLANTIC/s3lst-ds)
+[![Built with Material for MkDocs](https://img.shields.io/badge/Material_for_MkDocs-526CFE?logo=MaterialForMkDocs&logoColor=white)](https://squidfunk.github.io/mkdocs-material/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![uv](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FOnyx-Nostalgia%2Fuv%2Frefs%2Fheads%2Ffix%2Flogo-badge%2Fassets%2Fbadge%2Fv0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
@@ -150,8 +152,8 @@ package in your project, you would need:
 
 ## Documentation
 
-The full documentation is available at [GitHub
-Pages](https://colab-atlantic.github.io/s3lst-ds/).
+The full documentation is available at
+[GitHub Pages](https://colab-atlantic.github.io/s3lst-ds/).
 
 ## Contributing
 
@@ -164,10 +166,10 @@ and locally run them.
 
 If you are a project maintainer, please read
 [RELEASING.md](https://github.com/CoLAB-ATLANTIC/s3lst-ds/blob/main/RELEASING.md) to
-know how to build and publish the package to [PyPI](https://pypi.org/), create [GitHub
-releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
-and publish the documentation to [GitHub Pages](https://docs.github.com/en/pages)
-after successful merge pull requests.
+know how to build and publish the package to [PyPI](https://pypi.org/), create
+[GitHub releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
+and publish the documentation to [GitHub Pages](https://docs.github.com/en/pages) after
+successful merge pull requests.
 
 ## Citation
 
