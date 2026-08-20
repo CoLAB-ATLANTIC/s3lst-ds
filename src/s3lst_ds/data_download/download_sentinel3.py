@@ -1347,19 +1347,16 @@ def download_products(
         )
 
     else:
-        # Get LST products notable info from query results
-        lst_infos = ProdInfo.load_from_df(lst_query)  # type: ignore
-
         logger.info(
             f"[bold green]{len(lst_query)} Sentinel-3 LST products have been found"
             + " in the query:[/bold green][green]\n"
-            + "\n".join([lst_info.name for lst_info in lst_infos])
+            + "\n".join(lst_query["Name"].tolist())
             + "[/green]"
         )
 
     # WARNING: For Open-Cosmos project only: consider solely the LST product that has
     # the maximum footprint overlap with the AOI. If there are multiple products with
-    # maximum footprint overlap, select the one with smallest cloud cover fraction.
+    # maximum footprint overlap, select the one with the smallest cloud cover fraction.
     if config.filter_max_footprint_aoi_overlap:
         if len(lst_query) > 1:
             logger.info(
@@ -1383,7 +1380,8 @@ def download_products(
             ].copy()
 
             # If multiple products have the maximum AOI overlap, select the one with the
-            # lowest cloud cover fraction
+            # lowest cloud cover fraction by firstly sorting the queried items by cloud
+            # cover fraction in ascending order.
             if len(lst_query) > 1:
                 if "cloudCover" in lst_query.columns:
                     lst_query = lst_query.sort_values(
@@ -1405,6 +1403,9 @@ def download_products(
                     )
         # Select the first product
         lst_query = lst_query.iloc[[0]].reset_index(drop=True)
+
+    # Get LST products notable info from query results
+    lst_infos = ProdInfo.load_from_df(lst_query)  # type: ignore
 
     # Create a CDSE authentication state object for handling the fetching of a valid
     # CDSE access token
