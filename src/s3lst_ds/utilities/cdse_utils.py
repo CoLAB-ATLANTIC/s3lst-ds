@@ -70,6 +70,10 @@ class CDSEAuthState:
         Note that refreshing solely re-activates the access token. The request returns
         the same access and refresh tokens.
 
+        The number of active access tokens is limited to 100. The current value may be
+        known from CDSE's Device Activity page
+        (https://identity.dataspace.copernicus.eu/auth/realms/CDSE/account/account-security/device-activity).
+
 
         Returns
         -------
@@ -149,7 +153,7 @@ def get_access_and_refresh_tokens(
 
     # Define a maximum time past last access token generation after which a new one
     # would need to be done, in seconds (s)
-    time_threshold_generation = 54 * 60
+    time_threshold_generation = 45 * 60
 
     # Get difference between current time and the one of the last access token
     # generation
@@ -249,7 +253,7 @@ def get_access_and_refresh_tokens(
             r.raise_for_status()
 
             # Return access and refresh tokens as well as the time of the access token
-            # generation if no error occurred if no error occurred
+            # generation if no error occurred
             r_json = r.json()
             return {
                 "access_token": r_json["access_token"],
@@ -555,7 +559,8 @@ def download_cdse(
         4 or error `429 Client Error: Too Many Requests for url` would occur. According
         CDSE's "Quotas and Limitations" page, the "Number of concurrent connections
         limit" is 4 (for more details, read
-        https://documentation.dataspace.copernicus.eu/Quotas.html).
+        https://documentation.dataspace.copernicus.eu/Quotas.html). If `1`, no
+        parallelization is done.
 
     show_progress : bool, default=True
         `True` to display the download progress in real-time.
@@ -647,21 +652,32 @@ def download_cdse(
     )
 
     # Perform download using multithreading
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        # List of placeholders for the eventual result of a computation
-        futures = [
-            executor.submit(worker, prod_id, prod_name)
-            for prod_id, prod_name in zip(products_info["Id"], products_info["Name"])
-        ]
+    if max_workers != 1:
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # List of placeholders for the eventual result of a computation
+            futures = [
+                executor.submit(worker, prod_id, prod_name)
+                for prod_id, prod_name in zip(
+                    products_info["Id"], products_info["Name"]
+                )
+            ]
 
-        for future in as_completed(futures):
-            # Call result of the completed process to raise exception if there is any
-            # (if not done, exceptions may occur but not be raised)
-            _ = future.result()
+            for future in as_completed(futures):
+                # Call result of the completed process to raise exception if there is any
+                # (if not done, exceptions may occur but not be raised)
+                _ = future.result()
+                # Update progress bar with one more count per completed process
+                if pbar is not None:
+                    pbar.update(1)
+
+            # At the end close progress bar
+            if pbar is not None:
+                pbar.close()
+
+    else:
+        for prod_id, prod_name in zip(products_info["Id"], products_info["Name"]):
+            worker(prod_id, prod_name)
+
             # Update progress bar with one more count per completed process
             if pbar is not None:
                 pbar.update(1)
-
-        # At the end close progress bar
-        if pbar is not None:
-            pbar.close()

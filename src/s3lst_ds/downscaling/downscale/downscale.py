@@ -412,6 +412,8 @@ def downscale(
                     cols_mask=config.downscaler_masks,
                     scale=config.downscaler_scale,
                     encode=config.downscaler_encode,
+                    lasso_sel=config.downscaler_lasso_sel,
+                    lasso_alpha=config.downscaler_lasso_alpha,
                     max_workers=config.downscaler_max_workers,
                     **(
                         {"transform": downscaler_transform}
@@ -786,7 +788,7 @@ def downscale(
                             grid if j == 0 and k == 0 else None,
                             ground_truth if k == 0 else None,
                             scorer,
-                            f"{score[batch][grid][ground_truth][scorer]}",
+                            f"{score[batch][grid][ground_truth][scorer]:.5g}",
                         )
 
         logger.console.print()

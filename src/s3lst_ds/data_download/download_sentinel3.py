@@ -1016,6 +1016,7 @@ def download_product(
             ),
             path_out_dir=path_out_file.parent,
             access_token=access_token,
+            max_workers=1,
             logger=logger,
         )
 
@@ -1405,6 +1406,15 @@ def download_products(
         # Select the first product
         lst_query = lst_query.iloc[[0]].reset_index(drop=True)
 
+    # Create a CDSE authentication state object for handling the fetching of a valid
+    # CDSE access token
+    # NOTE: whenever auth.get_access_token() is called, the access token is
+    # generated, refreshed or regenerated as required to make it valid.
+    auth = CDSEAuthState(
+        username=os.environ["CDSE_USER"],
+        password=os.environ["CDSE_PASS"],
+    )
+
     for lst_info in lst_infos:
         # ---> Query Sentinel-3 SYN products that accompany current LST product
         logger.console.print()  # type: ignore
@@ -1530,15 +1540,6 @@ def download_products(
             )
 
         # ---> Download and unzip the current LST product
-
-        # Create a CDSE authentication state object for handling the fetching of a valid
-        # CDSE access token
-        # NOTE: whenever auth.get_access_token() is called, the access token is
-        # generated, refreshed or regenerated as required to make it valid.
-        auth = CDSEAuthState(
-            username=os.environ["CDSE_USER"],
-            password=os.environ["CDSE_PASS"],
-        )
 
         # Download and unzip the current LST product
         download_product(

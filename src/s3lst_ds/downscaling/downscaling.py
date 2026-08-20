@@ -244,6 +244,19 @@ class Downscaler(BaseEstimator, RegressorMixin):
 
     @property
     def scale(self) -> Literal["standardize", "min_max_normalize"] | None:
+        """
+        Get the scaling method to apply to numerical predictors:
+            - `"standardize"`: to standardize the numerical predictors (zero mean and
+            unit variance);
+            - `"min_max_normalize"`: to min-max normalize the numerical predictors (to
+            the range `[0, 1]`);
+            - `None`: to regard the numerical predictors raw (no scaling).
+
+        Returns
+        -------
+        scale : {"standardize", "min_max_normalize", None}
+            The scaling method to apply to numerical predictors.
+        """
         return self._scale  # type: ignore
 
     @property

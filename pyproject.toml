@@ -81,11 +81,16 @@ dependencies = [
 [dependency-groups]
 dev = ["pre-commit>=4.6.1", "ruff>=0.16.1"]
 docs = [
+    "cartopy>=0.25.0",
     "ipykernel>=7.3.0",
     "ipython>=9.16.0",
+    "ipywidgets>=8.1.9",
+    "matplotlib>=3.11.1",
     "mkdocs-github-admonitions-plugin>=0.1.1",
+    "mkdocs-jupyter>=0.26.3",
     "mkdocs-material>=9.7.7",
     "mkdocstrings[python]>=1.0.6",
+    "pingi>=0.1.8",
     "pymdown-extensions>=11.0.1",
 ]
 

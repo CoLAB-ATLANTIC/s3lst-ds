@@ -22,6 +22,9 @@ exclude_docs: |
 theme:
   # Name of the installed theme
   name: material  # Material for MkDocs
+  # folder with overrides to customize the theme (e.g., add custom CSS, JS, etc.)
+  # NOTE: https://squidfunk.github.io/mkdocs-material/customization/#setup-and-theme-structure
+  custom_dir: overrides
 
   features:
     # Suggest in the search bar, enabling auto-complete with tab
@@ -74,7 +77,10 @@ theme:
 nav:
   - About: index.md
   - Installation: installation.md
-  - Usage: usage.md
+  - Usage:
+    - Download Sentinel-3 Data: usage/download.ipynb
+    - Downscale Sentinel-3 LST: usage/downscale.ipynb
+    - Tune Multi-Timestamp Downscaler: usage/tune.ipynb
   - Contributing: contributing.md
   - Releasing: releasing.md
   - Citation: citation.md
@@ -101,6 +107,16 @@ plugins:
   # Search tab
   # NOTE: https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/#built-in-search-plugin
   - search
+  # Create automatic cross-references to any Markdown heading
+  # NOTE: https://mkdocstrings.github.io/usage/#cross-references-to-any-markdown-heading
+  # NOTE: https://github.com/mkdocstrings/autorefs
+  - autorefs
+  # To render Jupyter notebooks as part of the documentation
+  # NOTE: https://github.com/danielfrg/mkdocs-jupyter
+  - mkdocs-jupyter:
+      # Include source code in the rendered notebooks so that they may be downloaded
+      include_source: True
+      # no_prompt: True
   # Parse GitHub admonitions
   # NOTE: https://github.com/PGijsbers/admonitions
   - gh-admonitions
@@ -112,6 +128,7 @@ plugins:
           # Relative path (from the parent of this very file) to Python project folder
           paths: [src]
           options:
+
             heading_level: 2
 
             # DOCSTRINGS -------------------------------------------------------------
@@ -140,13 +157,17 @@ plugins:
             # current one is based.
             inherited_members: true
 
+            # Group the object's children by categories: attributes, classes, functions,
+            # and modules
+            group_by_category: true
+
             # Render auto-generated summaries of attributes, functions, etc.
             # at the start of each symbol's documentation.
             summary: true
 
             # # Render headings for parameters, making them linkable.
             # parameter_headings: true
-
+            
             # Always show the heading for the symbol you render with `::: id`.
             show_root_heading: true
 
@@ -172,14 +193,18 @@ plugins:
             # below the symbol heading.
             separate_signature: true
 
-            # # Show type annotations in signatures.
-            # show_signature_annotations: true
+            # Show type annotations in signatures.
+            show_signature_annotations: true
 
             # Show type parameters in signatures.
             show_signature_type_parameters: true
 
             # Show base classes OR inheritance diagram.
             show_bases: true
+
+            # Render attributes even without docstrings
+            show_if_no_docstring: true
+
 
 extra:
   
@@ -221,3 +246,19 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  # Render LaTeX
+  # NOTE: https://squidfunk.github.io/mkdocs-material/reference/math/#katex
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  # For LaTeX rendering
+  - javascripts/katex.js
+  - https://unpkg.com/katex@0/dist/katex.min.js
+  - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+
+extra_css:
+  # For LaTeX rendering
+  - https://unpkg.com/katex@0/dist/katex.min.css
+  # Set maximum output height for Jupyter notebook outputs
+  - stylesheets/extra.css
