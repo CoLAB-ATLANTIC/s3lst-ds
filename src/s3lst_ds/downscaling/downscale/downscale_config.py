@@ -155,6 +155,23 @@ class DownscaleConfig:
         Note that such transforms are redundant for the case of the single-timestamp
         architecture. They only take effect for the multi-timestamp architecture.
 
+    downscaler_lasso_sel : bool, default=False
+        If `downscaler` is not issued: whether to use a Lasso regression for selecting
+        the scaled-encoded `downscaler_X` predictors downstream of the preprocessor.
+        Lasso selection is such that solely the input predictors associated with
+        coefficients of the fitted Lasso regression model having absolute values larger
+        than `1e-5` are selected. Note that the non-encoded `downscaler_X` predictors
+        are regardlessly considered downstream of the preprocessor.
+
+    downscaler_lasso_alpha : float, default=1.0
+        If `downscaler` is not issued: the regularization strength of the Lasso
+        regression model used for selecting the scaled-encoded `downscaler_X` predictors
+        downstream of the preprocessor. Such regularization strength is the multiplying
+        constant of the weight vector L1-norm (sum of the absolute values of the
+        components) in the Lasso regression objective function. The larger the value,
+        the stronger the regularization. Note that this parameter only takes effect if
+        `downscaler_lasso_sel` is `True`.
+
     downscaler_max_workers : int, default=1
         Number of simultaneous multiple processes to be considered by the downscaler (in
         training, prediction and scoring). Note that if negative, one has the following
@@ -275,6 +292,8 @@ class DownscaleConfig:
     downscaler_scale: Literal["standardize", "min_max_normalize"] | None = "standardize"
     downscaler_encode: Literal["one_hot", "dummy"] | None = "dummy"
     downscaler_transform: Literal["center", "standardize"] | None = None
+    downscaler_lasso_sel: bool = False
+    downscaler_lasso_alpha: float = 1.0
     downscaler_max_workers: int = 1
     timestamps_infer: list[pd.Timestamp] | list[str] | None = None
     timestamps_fit: list[pd.Timestamp] | list[str] | None = None
@@ -351,6 +370,8 @@ config = DownscaleConfig(
     downscaler_scale="standardize",
     downscaler_encode="dummy",
     downscaler_transform="standardize",
+    downscaler_lasso_sel=False,
+    downscaler_lasso_alpha=1.0,
     # WARNING: downscaler_max_workers takes effect regardless of the downscaler being
     # issued or created from scratch.
     downscaler_max_workers=5,

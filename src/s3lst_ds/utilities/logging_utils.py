@@ -17,7 +17,6 @@ class RichLogger:
 
     Attributes
     ----------
-
     name : str, default="root"
         Name of the base logger. If a name was not issued, the base root logger (of name
         `"root"`) is considered.
@@ -62,8 +61,6 @@ class RichLogger:
     console: Console
         The Rich console (regardless of the handler being set or not).
 
-    Attributes
-    ----------
     level_mapper : dict[int or str or None, int or None]
         Class-level mapping between logging level aliases and their corresponding
         numeric levels. Numeric levels are mapped to themselves, logging level names are
@@ -178,17 +175,26 @@ class RichLogger:
 
         # Get base logger
         # NOTE: if `name` is `None`, the base root logger is returned.
-        self.base_logger = logging.getLogger(name)
-
+        self.base_logger: logging.Logger = logging.getLogger(name)
+        """The base logger."""
         # Redirect warnings of the warning package to another logger.
         # NOTE: downstream methods would make this and the base logger share the same
         # handlers.
         logging.captureWarnings(True)
-        self.base_warnings_logger = logging.getLogger("py.warnings")
-
+        self.base_warnings_logger: logging.Logger = logging.getLogger("py.warnings")
+        """
+        A logger for the warnings of the warning package. This logger shares the same
+        handlers as the base logger.
+        """
         # Set minimum logging level of the base logger if a level was issued
         self.level = level
-
+        """
+            Mode for logging:
+            - `None`, no logging is done.
+            - `"console"`, only Rich console logging is considered.
+            - `"file"`, only file logging is considered.
+            - `"both"`, both Rich console and file logging are considered.
+        """
         # Initialize file paths and modes for logging
         self._file_paths = [file_path] if file_path is not None else []
         self._file_modes = {file_path: file_mode} if file_path is not None else {}
@@ -845,6 +851,8 @@ def get_terminal_console(use_global: bool = False) -> Console:
     argument. In the case of the former, direct enforcing of the terminal mode cannot be
     done, but argument `is_jupyter` is set to `False` as in case of the latter.
 
+    Also set console width to `88` characters.
+
     Parameters
     ----------
     use_global : bool, default=False
@@ -860,6 +868,9 @@ def get_terminal_console(use_global: bool = False) -> Console:
     # `get_console()` calls would then use this same console.
     console = Console(force_terminal=True) if use_global is False else get_console()
     console.is_jupyter = False
+
+    # Set console width
+    console.width = 88
 
     return console
 

@@ -187,9 +187,19 @@ def score_train_test(
             for ground_truth in ["sentinel", "landsat"]:
                 try:
                     if (
-                        # Score donwscaler using Sentinel-3 data as ground truth
-                        # if the grid is coarse
-                        (grid == "coarse" and ground_truth == "sentinel")
+                        # Score donwscaler using Sentinel-3 data as ground truth if the
+                        # grid is coarse and if the batch is not a testing one without
+                        # the respective data
+                        (
+                            grid == "coarse"
+                            and ground_truth == "sentinel"
+                            and not (
+                                batch == "test"
+                                and not (
+                                    "test" in data_batcher.metadata["batch"].values
+                                )
+                            )
+                        )
                         # Score downscaler using Landsat data for both grids as
                         # ground truth in testing if such data is available
                         or (
@@ -870,6 +880,8 @@ def tune(
                 cols_mask=config.downscaler_masks,
                 scale=config.downscaler_scale,
                 encode=config.downscaler_encode,
+                lasso_sel=config.downscaler_lasso_sel,
+                lasso_alpha=config.downscaler_lasso_alpha,
                 max_workers=config.downscaler_max_workers,
                 transform=downscaler_transform,  # type: ignore
                 logger=logger,
@@ -1058,7 +1070,9 @@ def tune(
     table_hparams.add_column("Hyperparameter", justify="left")
     table_hparams.add_column("Value", justify="right")
     for param, value in best_params.items():
-        table_hparams.add_row(param, f"{value}")
+        table_hparams.add_row(
+            param, f"{value:.5g}" if not isinstance(value, str) else str(value)
+        )
     logger.console.print()
     logger.info(
         "The downscaler attained the following best hyperparameters:"
@@ -1088,7 +1102,7 @@ def tune(
                             grid if j == 0 and k == 0 else None,
                             ground_truth if k == 0 else None,
                             scorer,
-                            f"{score[batch][grid][ground_truth][scorer]}",
+                            f"{score[batch][grid][ground_truth][scorer]:.5g}",
                         )
 
         logger.console.print()
