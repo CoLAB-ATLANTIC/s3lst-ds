@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
-from typing import cast
 
+import pandas as pd
 import rioxarray as rioxr
 import xarray as xr
 from rioxarray.merge import merge_arrays
@@ -34,7 +34,8 @@ def merge_spatially(directories: list[Path], out_dir: Path) -> None:
 
     # Get geospatially merged files, one per variable
     for var_id in var_ids:
-        # Get list of all files in the row folders having the current band identifier
+        # Get list of paths to all files in the row folders having the current band
+        # identifier
         tile_files_match = [
             tile_file
             for directory in directories
@@ -42,18 +43,48 @@ def merge_spatially(directories: list[Path], out_dir: Path) -> None:
             if "_".join(tile_file.stem.split("_")[-2:]) == var_id
         ]
 
+        # Get Landsat acquisition date from file names
+        date = pd.Timestamp(tile_files_match[0].stem[17:25]).tz_localize("UTC")
+
         # If there is a file with same identifier as the current one per each row
         # folder, proceed with the merge of these files
         if len(tile_files_match) == len(directories):
             # List of DataArrays, one per matching file
             tiles = [
-                rioxr.open_rasterio(f, mask_and_scale=False) for f in tile_files_match
+                rioxr.open_rasterio(f, mask_and_scale=False)
+                # Remove redundant band dimension
+                .squeeze()
+                .drop_vars("band")
+                for f in tile_files_match
             ]
             # Geospatially merge the DataArrays
             merged = merge_arrays(tiles)  # type: ignore
             merged.name = var_id
-            # Write merged DataArray as raster file to the merge folder
-            merged.rio.to_raster((out_dir / f"{var_id}.TIF").resolve())
+
+            # Set acquisition date as coordinate
+            # NOTE: NetCDF cannot handle pd.Timestamp type. Time will be converted to
+            # seconds since 1972-01-01 00:00:00 UTC, as in accordance with CF
+            # conventions. For more details, see
+            # https://cf-convention.github.io/Data/cf-conventions/cf-conventions-1.13/cf-conventions.pdf#page=42.
+            merged = merged.expand_dims(  # type: ignore
+                dim={
+                    "time": [
+                        (date - pd.Timestamp("1972-01-01 00:00:00Z")).total_seconds()
+                    ]
+                }
+            )
+
+            # Set time coordinate attributes
+            merged["time"].attrs = {
+                "standard_name": "time",
+                "long_name": "Time",
+                "axis": "T",
+                "units": "seconds since 1972-1-1 00:00:00Z",
+                "calendar": "proleptic_gregorian",
+            }
+
+            # Write merged DataArray to the merge folder
+            merged.to_netcdf(out_dir / f"{var_id}.nc")
 
         # If there is a file missing, state that, and do not proceed with the merge of
         # these files
@@ -64,15 +95,22 @@ def merge_spatially(directories: list[Path], out_dir: Path) -> None:
             )
 
 
-def scale_landsat_band(tif_path: Path, gain: float, offset: float) -> xr.DataArray:
+def scale_landsat_band(path: Path, gain: float, offset: float) -> xr.DataArray:
     """
-    Read the file at path `tif_path`, scale the data by `gain` and displace it by
+    Read the file at path `path`, scale the data by `gain` and displace it by
     `offset` to obtain physical values. Further reproject it to EPSG:4326 and replace
     negative values with nan (as these are not physically possible, resulting from
     sensor anomalities). Return the result as DataArray.
     """
     # Read the file as DataArray
-    darray = cast(xr.DataArray, rioxr.open_rasterio(tif_path, mask_and_scale=True))
+    darray = xr.open_dataarray(
+        path,  # type: ignore
+        # Mask out NODATA values and scale
+        mask_and_scale=True,
+        # Properly decode coordinates and CRS
+        decode_coords="all",
+    )
+
     # Scale and offset the data
     # NOTE: the nodata value is re-written after the operation since the latter resets
     # the former to the default value

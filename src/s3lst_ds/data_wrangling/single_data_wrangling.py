@@ -482,16 +482,17 @@ class SingleDataWrangler:
         # Get Landsat LST data
         data = (
             xr.open_dataarray(
-                self.path_landsat / f"{self.data_vars.y}.TIF",  # type: ignore
+                self.path_landsat / f"{self.data_vars.y}.nc",  # type: ignore
                 # Mask out NODATA values and scale
                 mask_and_scale=True,
                 # Properly decode coordinates and CRS
                 decode_coords="all",
             )
+            # Drop redundant time coordinate
+            .squeeze()
+            .drop_vars("time")
             # Name DataArray
             .rename(self.data_vars.y_val)
-            # Remove singleton "band" dimension
-            .squeeze("band", drop=True)
             # Convert DataArray to Dataset
             .to_dataset()
         )
