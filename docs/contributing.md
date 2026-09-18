@@ -6,7 +6,7 @@ This page is intended for project developers. It describes the development workf
 
 To develop the present project you would need:
 
-- An [Unix](https://en.wikipedia.org/wiki/Unix)-like environment.
+- A [Unix](https://en.wikipedia.org/wiki/Unix)-like environment.
 - [`uv`](https://docs.astral.sh/uv/) project manager.
 - [`git`](https://git-scm.com/) version control system.
 - A [CDSE](https://dataspace.copernicus.eu/) account.

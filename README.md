@@ -54,7 +54,7 @@ data using either single or multi-timestamp scale-invariance-based models.
 To be able to install and use the [s3lst-ds](https://github.com/CoLAB-ATLANTIC/s3lst-ds)
 package in your project, you would need:
 
-- An [Unix](https://en.wikipedia.org/wiki/Unix)-like environment.
+- A [Unix](https://en.wikipedia.org/wiki/Unix)-like environment.
 - [`uv`](https://docs.astral.sh/uv/) project manager.
 - A [CDSE](https://dataspace.copernicus.eu/) account.
 

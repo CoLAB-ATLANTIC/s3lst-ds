@@ -521,11 +521,17 @@ class PiecewiseDownscaler(BaseEstimator, RegressorMixin):
 
                     y_fine_pred.to_netcdf(path_out)  # type: ignore
                 else:
-                    # In the case of no suffix, `to_raster()` considers GeoTIFF.
+                    # NOTE: In the case of no suffix, `to_raster()` considers GeoTIFF.
                     if path_out.suffix in [""]:
                         path_out = path_out.with_suffix(".tif")
 
-                    y_fine_pred.rio.to_raster(path_out)  # type: ignore
+                    # Use COG driver if the output is a GeoTIFF file
+                    y_fine_pred.rio.to_raster(  # type: ignore
+                        path_out,
+                        driver=None
+                        if path_out.suffix.lower() not in [".tif", ".tiff"]
+                        else "COG",
+                    )
 
             # Set y_fine_pred to None to return None at the end of the function
             y_fine_pred = None
