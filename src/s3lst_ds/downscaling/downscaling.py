@@ -645,6 +645,11 @@ class Downscaler(BaseEstimator, RegressorMixin):
                     if path_out.suffix in [""]:
                         path_out = path_out.with_suffix(".tif")
 
+                    # Since GeoTIFF can only handle one- or two-dimensional data, set
+                    # the time coordinate as an attribute
+                    y_fine_pred.attrs["time"] = y_fine_pred["time"].values[0]  # type: ignore
+                    y_fine_pred = y_fine_pred.squeeze(drop=True)  # type: ignore
+
                     # Use COG driver if the output is a GeoTIFF file
                     y_fine_pred.rio.to_raster(  # type: ignore
                         path_out,

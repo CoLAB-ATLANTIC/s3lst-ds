@@ -23,7 +23,7 @@ from rasterio.warp import Resampling
 # Import configurations for querying, downloading and filtering Sentinel-3 LST and SYN
 # products
 from s3lst_ds.data_download.download_sentinel3_config import (
-    Sentinel3Config,
+    DownloadSentinel3Config,
     config,
 )
 
@@ -56,6 +56,7 @@ from s3lst_ds.utilities.geometry_utils import (
 )
 from s3lst_ds.utilities.jobs_utils import parse_n_jobs
 from s3lst_ds.utilities.logging_utils import RichLogger
+from s3lst_ds.utilities.notebook_utils import is_jupyter
 from s3lst_ds.utilities.snappy_utils import import_esa_snappy
 from s3lst_ds.utilities.warnings_utils import suppress_warnings
 
@@ -230,7 +231,11 @@ class Sen3Processor:
             }
 
             # Mapper between axis aliases and coordinate variables
-            coord = {"y": "latitude_in", "x": "longitude_in", "z": "elevation_in"}
+            coord = {
+                "y": "latitude_in",
+                "x": "longitude_in",
+                "z": "elevation_in",
+            }
 
             # Step on image row and column coordinates to consider for the definition of
             # ground control points (GCPs), to be used in the georeferencing of the data
@@ -318,8 +323,8 @@ class Sen3Processor:
         if "bayes_in" in vars:
             data_vars["bayes_in"].rio.write_nodata(255, encoded=True, inplace=True)
 
-        # Get list of ground control points (points mapping image row and column coordinates
-        # to spatial x, y, z coordinates)
+        # Get list of ground control points (points mapping image row and column
+        # coordinates to spatial x, y, z coordinates)
         # NOTE: row and column coordinates are 0 at upper left corner fo the upper left
         # pixel. And the values of the xarray datasets are associated with the pixel
         # centres.
@@ -399,6 +404,36 @@ class Sen3Processor:
 
             # Clip the data to the AOI bounding box
             data_vars = data_vars.rio.clip_box(minx, miny, maxx, maxy)
+
+        # Get timestamp from file name
+        timestamp = pd.Timestamp(prod_path.name[16:31])
+
+        # Set time coordinate in seconds since 1972-01-01 00:00:00 UTC, as in accordance
+        # with CF conventions
+        # NOTE: see https://cf-convention.github.io/Data/cf-conventions/cf-conventions-1.13/cf-conventions.pdf#page=42
+        # WARNING: it is herein assumed that the timestamp is in the UTC timezone.
+        data_vars = data_vars.expand_dims(  # type: ignore
+            dim={
+                "time": [
+                    (
+                        timestamp.tz_localize("UTC")
+                        - pd.Timestamp("1972-01-01 00:00:00Z")
+                    ).total_seconds()  # type: ignore
+                ]
+            }
+        )
+
+        # Set time coordinate attributes
+        data_vars["time"].attrs = {  # type: ignore
+            "standard_name": "time",
+            "long_name": "Time",
+            "axis": "T",
+            "units": "seconds since 1972-1-1 00:00:00Z",
+            "calendar": "proleptic_gregorian",
+        }
+
+        # Set dimension labels
+        data_vars = data_vars.rename({"y": "lat", "x": "lon"})
 
         # Write the data to NetCDF
         data_vars.to_netcdf(f"{prod_path}.nc")
@@ -566,9 +601,12 @@ class Sen3Processor:
             # Get band attributes
             nodata = band.getNoDataValue()
             attrs = {
-                "long_name": (
-                    band.getDescription() if band.getDescription() is not None else ""
+                **(
+                    {"long_name": band.getDescription()}
+                    if band.getDescription() is not None
+                    else {}
                 ),
+                **({"units": band.getUnit()} if band.getUnit() is not None else {}),
                 "units": (band.getUnit() if band.getUnit() is not None else ""),
                 "valid_max": data[data != band.getNoDataValue()].max(),
                 "valid_min": data[data != band.getNoDataValue()].min(),
@@ -583,10 +621,10 @@ class Sen3Processor:
             band = xr.DataArray(
                 data=data,
                 name=band_name,
-                dims=("y", "x"),
+                dims=("lat", "lon"),
                 coords={
-                    "x": lon,
-                    "y": lat,
+                    "lon": lon,
+                    "lat": lat,
                 },
                 attrs=attrs,
             )
@@ -608,7 +646,7 @@ class Sen3Processor:
         bands.attrs = {}
 
         # Set Dataset spatial dimension attributes
-        bands["x"].attrs = {
+        bands["lon"].attrs = {
             "axis": "X",
             "long_name": "longitude",
             "standard_name": "longitude",
@@ -616,13 +654,40 @@ class Sen3Processor:
             "valid_min": lon[0],
             "units": "degrees_east",
         }
-        bands["y"].attrs = {
+        bands["lat"].attrs = {
             "axis": "Y",
             "long_name": "latitude",
             "standard_name": "latitude",
             "valid_max": lat[0],
             "valid_min": lat[-1],
             "units": "degrees_north",
+        }
+
+        # Get timestamp from file name
+        timestamp = pd.Timestamp(prod_path.name[16:31])
+
+        # Set time coordinate in seconds since 1972-01-01 00:00:00 UTC, as in accordance
+        # with CF conventions
+        # NOTE: see https://cf-convention.github.io/Data/cf-conventions/cf-conventions-1.13/cf-conventions.pdf#page=42
+        # WARNING: it is herein assumed that the timestamp is in the UTC timezone.
+        bands = bands.expand_dims(  # type: ignore
+            dim={
+                "time": [
+                    (
+                        timestamp.tz_localize("UTC")
+                        - pd.Timestamp("1972-01-01 00:00:00Z")
+                    ).total_seconds()  # type: ignore
+                ]
+            }
+        )
+
+        # Set time coordinate attributes
+        bands["time"].attrs = {  # type: ignore
+            "standard_name": "time",
+            "long_name": "Time",
+            "axis": "T",
+            "units": "seconds since 1972-1-1 00:00:00Z",
+            "calendar": "proleptic_gregorian",
         }
 
         # Write the Dataset to NetCDF
@@ -1090,7 +1155,7 @@ def delete_last_product(folder: Path, logger: RichLogger | None = None) -> None:
 def download_products(
     # Configuration parameters for querying, downloading and filtering Sentinel-3 LST
     # and SYN products.
-    config: Sentinel3Config,
+    config: DownloadSentinel3Config,
 ) -> None:
 
     # ---> Handle logging
@@ -1201,6 +1266,25 @@ def download_products(
         for date in end_sensing_dates
     ]
 
+    logger.console.print()  # type: ignore
+    # If Jupyter, log a message with a raw link to CDSE's Device Activity page.
+    # Otherwise, provide an aliased link.
+    # NOTE: this is necessary since Jupyter notebooks do not render aliased links
+    # properly unless `is_jupyter` attribute of the logger console is set to `True`.
+    # However, the latter would make the style for the displayed log less user-friendly.
+    if is_jupyter() is True:
+        logger.info(
+            "[bright_magenta]Check "
+            "[bright_blue]https://identity.dataspace.copernicus.eu/auth/realms/CDSE/account/account-security/device-activity"
+            "[/bright_blue] to manage your CDSE logged-in sessions.[/bright_magenta]"
+        )
+    else:
+        logger.info(
+            "[bright_magenta]Check "
+            "[bright_blue link=https://identity.dataspace.copernicus.eu/auth/realms/CDSE/account/account-security/device-activity]"
+            "CDSE's Device Activity page[/bright_blue link] "
+            "to manage your CDSE logged-in sessions.[/bright_magenta]"
+        )
     logger.console.print()  # type: ignore
     logger.info(
         "Downloading Sentinel-3 products for dates"

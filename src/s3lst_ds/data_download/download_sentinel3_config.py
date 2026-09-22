@@ -31,7 +31,7 @@ CLIM4CITIES_REL_ORBIT = [
 
 
 @dataclass
-class Sentinel3Config:
+class DownloadSentinel3Config:
     """
     Configurations for querying, downloading and filtering Sentinel-3 companion LST and
     SYN products (to be used in download_sentinel3.py).
@@ -196,7 +196,7 @@ class Sentinel3Config:
 # Configurations for for querying, downloading and filtering Sentinel-3 companion LST
 # and SYN products
 # (https://sentiwiki.copernicus.eu/web/slstr-products#S3-SLSTR-Products-L2-LST-Products)
-config = Sentinel3Config(
+config = DownloadSentinel3Config(
     out_dir=Path(__file__).resolve().parents[3] / "assets/data/raw/sentinel3_trial",
     timeliness="NT",
     start_sensing_dates=[

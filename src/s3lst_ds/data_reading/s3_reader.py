@@ -24,6 +24,7 @@ class Sen3Loader:
             self.lst = self._load_file(next(self.path.glob("*LST*.SEN3.nc")))
             self.syn = self._load_file(next(self.path.glob("*SYN*.SEN3.nc")))
             self.timestamp = self._get_timestamp()
+            self._squeeze()
 
         # NOTE: There is no error message in the case of an StopIteration exception
         # (which occurs when in the next() function there is no element to iterate over
@@ -58,7 +59,7 @@ class Sen3Loader:
 
     def _get_timestamp(self) -> pd.Timestamp:
         """
-        Extract the start sensing timestamp from the Sentinel-3 LST product name.
+        Extract the start sensing timestamp from the Sentinel-3 LST product.
 
         Returns
         -------
@@ -67,9 +68,21 @@ class Sen3Loader:
             Start sensing timestamp associated with Sentinel-3 LST product.
 
         """
-        timestamp = pd.Timestamp(next(self.path.glob("*LST*.SEN3.nc")).name[16:31])
+        # WARNING: it is herein assumed that the timestamp is in the UTC timezone.
+        timestamp = pd.Timestamp(self.lst["time"].values[0], tz="UTC")
 
         return timestamp
+
+    def _squeeze(self) -> None:
+        """
+        Drop redundant time dimension from LST and SYN datasets.
+        """
+
+        # Drop redundant time coordinate from both LST and SYN datasets
+        self.lst = self.lst.squeeze()
+        self.lst = self.lst.drop_vars("time")
+        self.syn = self.syn.squeeze()
+        self.syn = self.syn.drop_vars("time")
 
     def calc_ndvi(self) -> xr.DataArray:
         """

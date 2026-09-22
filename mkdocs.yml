@@ -83,6 +83,7 @@ nav:
     - Tune Multi-Timestamp Downscaler: usage/tune.ipynb
   - Contributing: contributing.md
   - Releasing: releasing.md
+  - Acknowledgements: acknowledgements.md
   - Citation: citation.md
   - API Reference:
     - Scripts:

@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import ClassVar, Literal, cast
 
 import geopandas as gpd
@@ -376,3 +377,111 @@ def reproject_match(
     )
 
     return reprojected_data
+
+
+def convert_raster(path_in: Path, path_out: Path) -> None:
+    """
+    Convert a raster file at `path_in` to the format specified by the suffix of
+    `path_out`, writing it at the latter. Note that in the case of converting to a
+    GeoTIFF file (suffixes `".tif" or `".tiff"`), the [COG](https://cogeo.org/) driver
+    is considered.
+
+    In the case of converting to a GeoTIFF file (suffixes `".tif" or `".tiff"`), the
+    function ensures that the raster conforms to the limitations of the GeoTIFF format,
+    which only supports one- or two-dimensional data. If the raster has more than two
+    dimensions with multiple coordinate values, a `ValueError` is raised. Dimensions
+    with a single coordinate value are squeezed out and the values are stored as
+    attributes.
+
+    Parameters
+    ----------
+    path_in: Path
+        Path to the input raster file.
+
+    path_out: Path
+        Path to the output raster file with its format specified by the suffix.
+
+    Raises
+    ------
+    ValueError
+        If the raster cannot be written to a GeoTIFF file, having more than two
+        dimensions with multiple coordinate values. GeoTIFF can only support one- or
+        two-dimensional data.
+    """
+
+    # Read raster as a DataArray, falling back to Dataset if the raster contains
+    # multiple data variables
+    try:
+        data = xr.open_dataarray(path_in, mask_and_scale=True, decode_coords="all")
+
+    except ValueError as e:
+        if (
+            "Given file dataset contains more than one data variable. Please read with "
+            "xarray.open_dataset and then select the variable you want."
+        ) == str(e):
+            data = xr.open_dataset(path_in, mask_and_scale=True, decode_coords="all")
+        else:
+            raise ValueError(e)
+
+    # Set the output file suffix to ".tif" (GeoTIFF) if it is not specified. NOTE: In
+    # the case of no suffix, `to_raster()` considers GeoTIFF.
+    if path_out.suffix in [""]:
+        path_out = path_out.with_suffix(".tif")
+
+    if path_out.suffix.lower() in [".tif", ".tiff"]:
+        # If the output is a GeoTIFF file, and the number of dimensions with multiple
+        # coordinate values is not greater than 2, set the values of single coordinate
+        # dimensions as attributes, since GeoTIFF solely supports one or two dimensional
+        # data. If the number of dimensions with multiple coordinate values exceeds 2,
+        # raise an error as nothing can be done.
+        if len([coord for coord in data.coords if data[coord].ndim > 1]) <= 2:
+            # Set the values of single coordinate dimensions as attributes
+            for coord in data.coords:
+                if data[coord].ndim == 1:
+                    data.attrs[coord] = data[coord].values[0]
+            # Drop dimensions with single coordinate values
+            data = data.squeeze(drop=True)
+        else:
+            raise ValueError(
+                "Cannot write raster to GeoTIFF file as it contains more than two "
+                "dimensions with multiple coordinate values. GeoTIFF can only support "
+                "one- or two-dimensional data."
+            )
+
+        if isinstance(data, xr.Dataset):
+            # If the input is a dataset and the output is a GeoTIFF file, set a common
+            # NODATA value (-9999) to all variables of the dataset (this is required
+            # when writing a dataset to a GeoTIFF file)
+            encoded_nodata = {
+                var: data[var].rio.encoded_nodata for var in data.data_vars
+            }
+            if len(set(encoded_nodata.values())) > 1:
+                for var in data.data_vars:
+                    data[var].rio.write_nodata(
+                        input_nodata=-9999, encoded=True, inplace=True
+                    )
+
+            # If he input is a dataset and the output is a GeoTIFF file, define the long
+            # names of the variables as the names of the latter if not set, so that the
+            # resulting bands are properly described.
+            for var in data.data_vars:
+                if (
+                    data[var].attrs.get("long_name") is None
+                    or data[var].attrs.get("long_name") == ""
+                ):
+                    data[var].attrs["long_name"] = var
+
+    # Create the output parent directory if it doesn't exist
+    path_out.parent.mkdir(parents=True, exist_ok=True)
+
+    # Write the raster to file
+    # NOTE: If the output format is NetCDF, use `to_netcdf()` since rioxarray
+    # `to_raster()` cannot handle NetCDF files. If not, use `to_raster()` for other
+    # formats. In the case of GeoTIFF, consider using the COG driver.
+    if path_out.suffix == ".nc":
+        data.to_netcdf(path_out)  # type: ignore
+    else:
+        data.rio.to_raster(  # type: ignore
+            path_out,
+            driver=None if path_out.suffix.lower() not in [".tif", ".tiff"] else "COG",
+        )

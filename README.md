@@ -171,6 +171,14 @@ know how to build and publish the package to [PyPI](https://pypi.org/), create
 and publish the documentation to [GitHub Pages](https://docs.github.com/en/pages) after
 successful merge pull requests.
 
+## Acknowledgments
+
+This package was produced within the [CLIM4cities](https://zenodo.org/records/11315304)
+project funded by the European Space Agency (ESA Contract No. 4000143628/24/I-DT, AI
+Trustworthy Applications for Climate) and by the Recovery and Resilience Plan Investment
+RE-C05-i02: Interface Mission - CoLAB, certified by the National Innovation Agency
+(Project N.º 01/C05-i02/2022).
+
 ## Citation
 
 If you use `s3lst-ds` in research or software, please cite the

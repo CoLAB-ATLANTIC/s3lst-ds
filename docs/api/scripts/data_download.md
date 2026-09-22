@@ -7,7 +7,7 @@
 
 ## Configuration
 
-::: s3lst_ds.data_download.download_sentinel3_config.Sentinel3Config
+::: s3lst_ds.data_download.download_sentinel3_config.DownloadSentinel3Config
 
 ## Caller
 

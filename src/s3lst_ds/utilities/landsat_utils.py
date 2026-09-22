@@ -53,7 +53,7 @@ def merge_spatially(directories: list[Path], out_dir: Path) -> None:
             tiles = [
                 rioxr.open_rasterio(f, mask_and_scale=False)
                 # Remove redundant band dimension
-                .squeeze()
+                .squeeze()  # type: ignore
                 .drop_vars("band")
                 for f in tile_files_match
             ]
