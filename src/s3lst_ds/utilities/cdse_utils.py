@@ -1,4 +1,5 @@
 import json
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
@@ -606,36 +607,82 @@ def download_cdse(
             + "/$value"
         )
 
-        # Perform download request
-        # NOTE: with stream set to True, the resultant response is of a stream kind.
-        # In that case, the file is not fully loaded into memory and downloaded. The
-        # streaming allows one to do the loading and download in chunks, which further
-        # avoids memory problems
-        r = session.get(download_url, stream=True)
+        # ---> Perform download request, retrying in case of connection or timeout
+        # errors
+        # Maximum number of download attempts
+        max_attempts = 5
+        # Delay between retrials in seconds
+        retrial_delay = 5
+        for attempt in range(1, max_attempts + 1):
+            try:
+                # NOTE: with stream set to True, the resultant response is of a stream
+                # kind. In that case, the file is not fully loaded into memory and
+                # downloaded. The streaming allows one to do the loading and download in
+                # chunks, which further avoids memory problems
+                # NOTE: timeout=(30, 60) sets connection and data reading timeouts to 30
+                # and 60 seconds, respectively.
+                with session.get(download_url, stream=True, timeout=(30, 60)) as r:
+                    # Raise an exception in case of request error
+                    r.raise_for_status()
+                    # If no error, try opening file in write-binary mode and writing the
+                    # content in chunks of 1 MB
+                    # NOTE: this works with any file format since it writes binary data.
+                    try:
+                        with open(path_out, "wb") as file:
+                            for chunk in r.iter_content(chunk_size=1024**2):
+                                if chunk:
+                                    file.write(chunk)
+                    except Exception as e:  # noqa: BLE001
+                        if logger is not None:
+                            logger.error(
+                                "[bold red]Error occurred while writing"
+                                + " file"
+                                + f" {prod_name}."
+                                + f"\nError message: {e}"
+                                + "\nRun will stop.[/bold red]",
+                            )
+                        raise WritingError(
+                            "Error occurred while writing file"
+                            + f" {prod_name}."
+                            + f"\nError message: {e}"
+                        )
 
-        # Raise an exception in case of request error, stopping the code run
-        r.raise_for_status()
-        # If no error, try opening file in write-binary mode and writing the content in
-        # chunks of 8 KB
-        # NOTE: this works with any file format since it writes binary data
-        try:
-            with open(path_out, "wb") as file:
-                for chunk in r.iter_content(chunk_size=8192):
-                    if chunk:
-                        file.write(chunk)
-        except Exception as e:  # noqa: BLE001
-            if logger is not None:
-                logger.error(
-                    "[bold red]Error occurred while downloading and writing file"
-                    + f" {prod_name}."
-                    + f"\nError message: {e}"
-                    + "\nRun will stop.[/bold red]",
-                )
-            raise WritingError(
-                "Error occurred while downloading and writing file"
-                + f" {prod_name}."
-                + f"\nError message: {e}"
-            )
+                break
+
+            # In case of connection or timeout error, retry the download up to the
+            # maximum number of retrials
+            except (
+                requests.exceptions.ConnectionError,
+                requests.exceptions.Timeout,
+            ) as e:
+                if attempt == max_attempts:
+                    if logger is not None:
+                        logger.error(
+                            "[bold red]Error occurred while downloading file"
+                            + f" {prod_name}."
+                            + f"\nError message: {e}"
+                            + "\nMaximum number of download attempts"
+                            + f" ({max_attempts}) reached."
+                            + "\nRun will stop.[/bold red]",
+                        )
+                    raise type(e)(
+                        "Error occurred while downloading file"
+                        + f" {prod_name}."
+                        + f"\nError message: {e}"
+                        + f"\nMaximum number of download attempts ({max_attempts})"
+                        + " reached."
+                    )
+
+                else:
+                    if logger is not None:
+                        logger.warning(
+                            "[bold yellow]Error occurred while downloading file"
+                            + f" {prod_name}."
+                            + f"\nError message: {e}"
+                            + f"\nRetrying with attempt {attempt + 1}/{max_attempts} in"
+                            + f" {retrial_delay} seconds...[/bold yellow]"
+                        )
+                    time.sleep(retrial_delay)
 
     # Define a progress bar to show download progress, if wanted
     pbar = (
