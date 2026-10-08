@@ -9,6 +9,7 @@ from . import (
     mae,
     mae_delta,
     mbe,
+    mr,
     r2,
     r2_oos,
     rmse,
@@ -26,6 +27,7 @@ _SCORERS = {
     "mae": mae,
     "mae_delta": mae_delta,
     "mbe": mbe,
+    "mr": mr,
 }
 
 

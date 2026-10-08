@@ -216,6 +216,37 @@ def mean_bias_error(
     return mbe
 
 
+# Function for mean residual
+def mean_residual(
+    y_true: np.ndarray | pd.Series,
+    y_pred: np.ndarray | pd.Series,
+    sample_weight: np.ndarray | pd.Series | None = None,
+) -> float:
+    """
+    Compute mean residual (MR).
+
+    Parameters
+    ----------
+
+        y_true : np.ndarray or pd.Series
+            The true target.
+        y_pred : np.ndarray or pd.Series
+            The target predicted by the model.
+        sample_weight : np.ndarray or pd.Series or None, default=None
+            Weight of each sample.
+
+    Returns
+    -------
+
+        mr : float
+            The mean residual.
+    """
+
+    mr = -mean_bias_error(y_true=y_true, y_pred=y_pred, sample_weight=sample_weight)
+
+    return mr
+
+
 # R-squared (Coefficient of determination)
 r2 = Scorer(
     alias="r2",
@@ -284,28 +315,15 @@ mbe = Scorer(
     alias="mbe",
     alias_fancy=r"$\mathrm{MBE}$",
     func=mean_bias_error,
-    greater_is_better=False,
+    greater_is_better=None,
     dimensionless=False,
 )
 
-# Akaike Information Criterion (AIC)
-# NOTE: https://en.wikipedia.org/wiki/Akaike_information_criterion
-aic = Scorer(
-    alias="aic",
-    alias_fancy=r"$\mathrm{AIC}$",
-    # WARNING: missing function.
-    func=dummy,
-    greater_is_better=False,
-    dimensionless=True,
-)
-
-# Bayesian Information Criterion (BIC)
-# NOTE: https://en.wikipedia.org/wiki/Bayesian_information_criterion
-bic = Scorer(
-    alias="bic",
-    alias_fancy=r"$\mathrm{BIC}$",
-    # WARNING: missing function.
-    func=dummy,
-    greater_is_better=False,
-    dimensionless=True,
+# Mean residual
+mr = Scorer(
+    alias="mr",
+    alias_fancy=r"$\mathrm{Mean\,\,Residual}$",
+    func=mean_residual,
+    greater_is_better=None,
+    dimensionless=False,
 )

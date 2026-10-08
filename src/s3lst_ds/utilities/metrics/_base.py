@@ -29,9 +29,11 @@ class Scorer:
     func : Callable
         The scoring function.
 
-    greater_is_better : bool, default=True
-        Whether `func` is a score function (default), meaning high is good, or a loss
-        function, meaning low is good.
+    greater_is_better : bool or None, default=None
+        Whether `func` is a score function, which means that high values are better, or
+        a loss function, which means the low values are better. If `None`, `func` is
+        neither a score nor a loss function (e.g. a signed error function such as mean
+        bias error or mean residual).
 
     dimensionless : bool, default=True
         Whether the score is physically non-dimensional (i.e. without physical units).
@@ -42,7 +44,7 @@ class Scorer:
         alias: str,
         alias_fancy: str,
         func: Callable,
-        greater_is_better: bool = True,
+        greater_is_better: bool | None = None,
         dimensionless: bool = True,
     ):
         self.alias = alias
