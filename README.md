@@ -56,7 +56,7 @@ of 2026 during a
 these have been obtained with the present package.
 
 <p>
-    <img src="https://github.com/CoLAB-ATLANTIC/s3lst-ds/blob/main/docs/images/lisbon_split_map.png?raw=true" width="700" />
+    <img src="https://github.com/CoLAB-ATLANTIC/s3lst-ds/blob/main/docs/images/lisbon_split_map.gif?raw=true" width="700" />
 </p>
 
 ## Requirements
