@@ -12,6 +12,7 @@ from sklearn.neural_network import MLPRegressor
 from s3lst_ds.data_batching.data_batching import DataBatcher
 from s3lst_ds.downscaling.downscaling import Downscaler
 from s3lst_ds.downscaling.regression import Regressor
+from s3lst_ds.utilities.path_utils import get_project_root_path
 
 
 def params_tune_getter(
@@ -430,30 +431,22 @@ class TuneConfig:
 
 # Configurations for tuning
 config = TuneConfig(
-    # data_batcher=Path(
-    #     Path(__file__).resolve().parents[4]
-    #     / "assets/results/tune_trial/data_batcher.joblib"
-    # ),
     data_batcher_data_wrangler_path_sentinel3=(
-        Path(__file__).resolve().parents[4] / "assets/data/processed/sentinel3"
+        get_project_root_path() / "assets/data/processed/sentinel3"
     ),
     data_batcher_data_wrangler_path_spatial_pred=(
-        Path(__file__).resolve().parents[4]
-        / "assets/data/processed/fixed_predictors.nc"
+        get_project_root_path() / "assets/data/processed/spatial_predictors.nc"
     ),
-    data_batcher_data_wrangler_aoi="POLYGON ((10 55, 11 55, 11 56, 10 56, 10 55))",
+    data_batcher_data_wrangler_aoi=get_project_root_path() / "assets/aoi/c4c.shp",
     data_batcher_data_wrangler_path_landsat=(
-        Path(__file__).resolve().parents[4] / "assets/data/processed/landsat"
+        get_project_root_path() / "assets/data/processed/landsat"
     ),
     data_batcher_data_wrangler_vars=[
         "FVC",
         "NDWI",
         "TCD",
-        "COASTDIST",
+        "DCOAST",
         "IMD",
-        # "season",
-        # "LCZ",
-        # "UD",
     ],
     # WARNING: data_wrangler_max_workers takes effect regardless of the downscaler being
     # issued or created from scratch.
@@ -461,34 +454,6 @@ config = TuneConfig(
     data_batcher_n_cross_val_folds=5,
     data_batcher_var_cross_val_strat="season",
     data_batcher_rnd_seed=42,
-    # downscaler=(
-    #     Path(__file__).resolve().parents[4]
-    #     / "assets/results/tune_trial/downscaler.joblib"
-    # ),
-    # downscaler=Downscaler(
-    #     base_model=MLPRegressor(
-    #         random_state=42,
-    #         batch_size=1024,
-    #         activation="relu",
-    #         solver="adam",
-    #         beta_1=0.9,
-    #         beta_2=0.999,
-    #         epsilon=1e-08,
-    #         verbose=False,
-    #         shuffle=True,
-    #         max_iter=1000,
-    #         early_stopping=True,  # NOTE: R2 is used has validation scorer
-    #         validation_fraction=0.2,
-    #         n_iter_no_change=10,
-    #         tol=1e-3,
-    #     ),
-    #     cols_X=["FVC", "NDWI", "COASTDIST", "IMD", "TCD"],
-    #     cols_mask=["aoi"],
-    #     scale="standardize",
-    #     encode="dummy",
-    #     max_workers=5,
-    #     transform="standardize",  # type: ignore
-    # ),
     downscaler_base_model=MLPRegressor(
         random_state=42,
         batch_size=1024,
@@ -505,7 +470,7 @@ config = TuneConfig(
         n_iter_no_change=10,
         tol=1e-3,
     ),
-    downscaler_X=["FVC", "NDWI", "COASTDIST", "IMD", "TCD"],
+    downscaler_X=["FVC", "NDWI", "DCOAST", "IMD", "TCD"],
     # WARNING: downscaler_masks takes effect regardless of the downscaler being issued
     # or created from scratch.
     downscaler_masks=["aoi"],
@@ -517,8 +482,6 @@ config = TuneConfig(
     # WARNING: downscaler_max_workers takes effect regardless of the downscaler being
     # issued or created from scratch.
     downscaler_max_workers=5,
-    # sample_weight_fit="IMD",
-    # sample_weight_score="IMD",
     scorers=["r2", "rmse", "rmse_delta", "mae", "mae_delta", "mbe"],
     best_scorer="rmse",
     correct=True,
@@ -526,7 +489,7 @@ config = TuneConfig(
     tune_rnd_seed=42,
     tune_n_trials=2,
     tune_n_jobs=10,
-    path_out=Path(__file__).resolve().parents[4] / "assets/results/tune_trial",
+    path_out=get_project_root_path() / "assets/results/tune",
     out_data_batcher=True,
     log_mode="both",
 )

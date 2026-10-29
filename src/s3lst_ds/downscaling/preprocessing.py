@@ -623,7 +623,7 @@ class LassoNumPredictorSelector(BaseEstimator, TransformerMixin):
 
         pipeline = (
             # NOTE: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFromModel.html
-            SelectFromModel(estimator=Lasso(alpha=self.lasso_alpha), threshold=0)
+            SelectFromModel(estimator=Lasso(alpha=self.lasso_alpha), threshold=1e-5)
             if self.lasso_sel is True
             else IdentityTransformer()
         )

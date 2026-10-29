@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
+from s3lst_ds.utilities.path_utils import get_project_root_path
+
 # Sentinel-3 relative orbit numbers whose respective orbits fully cover CLIM4cities AOI
 # in a descending approach
 # NOTE: More information on the relative orbits may be obtained from Sentinel-3 Mission
@@ -197,15 +199,15 @@ class DownloadSentinel3Config:
 # and SYN products
 # (https://sentiwiki.copernicus.eu/web/slstr-products#S3-SLSTR-Products-L2-LST-Products)
 config = DownloadSentinel3Config(
-    out_dir=Path(__file__).resolve().parents[3] / "assets/data/raw/sentinel3_trial_new",
+    out_dir=get_project_root_path() / "assets/data/raw/sentinel3",
     timeliness="NT",
     start_sensing_dates=[
-        "20200901",
+        "20220101",
     ],
     end_sensing_dates=[
-        "20201231",
+        "20231231",
     ],
-    geometry_aoi=Path(__file__).resolve().parents[3] / "assets/aoi/clim4cities.shp",
+    geometry_aoi=get_project_root_path() / "assets/aoi/c4c.shp",
     geometry_query=None,
     cloud_cover_lims=(0, 100),
     relative_orbit=None,

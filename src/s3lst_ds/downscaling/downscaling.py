@@ -715,15 +715,16 @@ class Downscaler(BaseEstimator, RegressorMixin):
 
         dims : tuple or None, default=None
             Labels for the dimensions of the predicted target if it is returned in grid
-            form. If not issued, it is set to ("y", "x") by default.
+            form. If not issued, it is set to ("lat", "lon") by default.
 
         attrs : dict or None, default=None
             Attributes to set in the predicted target if it is returned in grid form. If
             not issued, it is set as in accordance with the CF conventions
             (https://cf-convention.github.io/Data/cf-conventions/cf-conventions-1.13/cf-conventions.pdf#temperature-units):
                 {
-                    "standard_name": "land_surface_temperature", "long_name": "Land
-                    surface temperature", "units": "K",
+                    "standard_name": "land_surface_temperature",
+                    "long_name": "Land surface temperature",
+                    "units": "K",
                 }
 
         path_out : dict[pd.Timestamp, Path] or None, default=None
@@ -856,7 +857,7 @@ class Downscaler(BaseEstimator, RegressorMixin):
         if pbar is not None:
             pbar.close()
 
-        # Convert y_fine_pred to None if it any of their values was written to files.
+        # Convert y_fine_pred to None if any of their values was written to file.
         if None not in path_out.values():  # type: ignore
             y_fine_pred = None
 
@@ -895,7 +896,7 @@ class Downscaler(BaseEstimator, RegressorMixin):
 
         dims : tuple or None, default=None
             Labels for the dimensions of the predicted target if it is returned in grid
-            form. If not issued, it is set to ("y", "x") by default.
+            form. If not issued, it is set to ("lat", "lon") by default.
 
         attrs : dict or None, default=None
             Attributes to set in the predicted target if it is returned in grid form. If

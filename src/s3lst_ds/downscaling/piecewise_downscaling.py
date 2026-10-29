@@ -596,7 +596,7 @@ class PiecewiseDownscaler(BaseEstimator, RegressorMixin):
 
         dims : tuple or None, default=None
             Labels for the dimensions of the predicted target if it is returned in grid
-            form. If not issued, it is set to ("y", "x") by default.
+            form. If not issued, it is set to ("lat", "lon") by default.
 
         attrs : dict or None, default=None
             Attributes to set in the predicted target if it is returned in grid form. If
@@ -772,7 +772,7 @@ class PiecewiseDownscaler(BaseEstimator, RegressorMixin):
 
         dims : tuple or None, default=None
             Labels for the dimensions of the predicted target if it is returned in grid
-            form. If not issued, it is set to ("y", "x") by default.
+            form. If not issued, it is set to ("lat", "lon") by default.
 
         attrs : dict or None, default=None
             Attributes to set in the predicted target if it is returned in grid form. If

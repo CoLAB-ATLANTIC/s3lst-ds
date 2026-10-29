@@ -9,6 +9,7 @@ from s3lst_ds.data_wrangling.data_wrangling import DataWrangler
 from s3lst_ds.downscaling.downscaling import Downscaler
 from s3lst_ds.downscaling.piecewise_downscaling import PiecewiseDownscaler
 from s3lst_ds.downscaling.regression import Regressor
+from s3lst_ds.utilities.path_utils import get_project_root_path
 
 
 @dataclass
@@ -315,54 +316,33 @@ class DownscaleConfig:
 
 # Configurations for downscaling
 config = DownscaleConfig(
-    # data_wrangler=Path(
-    #     Path(__file__).resolve().parents[4] / "assets/data/results/donwscale_trial/data_wrangler.joblib"
-    # ),
     data_wrangler_path_sentinel3=Path(
-        Path(__file__).resolve().parents[4] / "assets/data/raw/sentinel3_trial"
+        get_project_root_path() / "assets/data/processed/sentinel3"
     ),
-    # data_wrangler_path_spatial_pred=Path(
-    #     Path(__file__).resolve().parents[4]
-    #     / "assets/data/raw/fixed_predictors.nc"
-    # ),
-    data_wrangler_aoi="POLYGON ((10 55, 11 55, 11 56, 10 56, 10 55))",
-    # data_wrangler_path_landsat=Path(
-    #     Path(__file__).resolve().parents[4] / "assets/data/raw/landsat"
-    # ),
+    data_wrangler_path_spatial_pred=Path(
+        get_project_root_path() / "assets/data/processed/spatial_predictors.nc"
+    ),
+    data_wrangler_aoi=get_project_root_path() / "assets/aoi/c4c.shp",
+    data_wrangler_path_landsat=get_project_root_path()
+    / "assets/data/processed/landsat",
     data_wrangler_vars=[
         "FVC",
         "NDWI",
-        # "TCD",
-        # "COASTDIST",
-        # "IMD",
-        # "season",
-        # "LCZ",
-        # "UD",
+        "DCOAST",
+        "IMD",
+        "TCD",
     ],
     # WARNING: data_wrangler_max_workers takes effect regardless of the downscaler being
     # issued or created from scratch.
     data_wrangler_max_workers=5,
-    # downscaler=Path(
-    #     Path(__file__).resolve().parents[4] / "assets/results/donwscale_trial/downscaler.joblib"
-    # ),
-    # downscaler=Downscaler(
-    #     base_model=LinearRegression(),
-    #     cols_X=["FVC", "NDWI", "COASTDIST", "IMD", "TCD"],
-    #     cols_mask=["aoi"],
-    #     scale="standardize",
-    #     encode="dummy",
-    #     max_workers=5,
-    #     transform="standardize",  # type: ignore
-    # ),
     downscaler_architecture="single",
-    # downscaler_base_model=DummyRegressor(),
     downscaler_base_model=LinearRegression(),
     downscaler_X=[
         "FVC",
         "NDWI",
-        # "COASTDIST",
-        # "IMD",
-        # "TCD",
+        "DCOAST",
+        "IMD",
+        "TCD",
     ],
     # WARNING: downscaler_masks takes effect regardless of the downscaler being issued
     # or created from scratch.
@@ -375,22 +355,6 @@ config = DownscaleConfig(
     # WARNING: downscaler_max_workers takes effect regardless of the downscaler being
     # issued or created from scratch.
     downscaler_max_workers=5,
-    # timestamps_infer=[
-    #     "2020-05-30 10:17:38",
-    #     "2020-06-15 10:02:39",
-    #     "2022-04-19 10:15:43",
-    #     "2022-10-19 10:10:10",
-    #     "2023-05-08 09:59:00",
-    #     "2023-06-08 09:55:13",
-    #     "2023-09-04 10:13:49",
-    # ],
-    # timestamps_fit=[
-    #     "2022-04-19 10:15:43",
-    #     "2023-05-08 09:59:00",
-    #     "2023-09-04 09:34:54",
-    # ],
-    # sample_weight_fit="UD",
-    # sample_weight_score="UD",
     score=True,
     scorers=["r2", "rmse", "rmse_delta", "mae", "mae_delta", "mbe"],
     retrain=False,
@@ -398,7 +362,7 @@ config = DownscaleConfig(
     gridded=True,
     dims=None,
     attrs=None,
-    path_out=Path(__file__).resolve().parents[4] / "assets/results/downscale_trial",
+    path_out=get_project_root_path() / "assets/results/downscale",
     file_ext_grid=".nc",
     out_data_wrangler=True,
     out_downscaler=True,

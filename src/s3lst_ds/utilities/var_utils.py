@@ -29,7 +29,7 @@ class DataVars:
             - `"DEM"`
             - `"IMD"`
             - `"TOPEX"`
-            - `"COASTDIST"`
+            - `"DCOAST"`
             - `"LCZ"`
             - `"UD"`
 
@@ -89,7 +89,7 @@ class DataVars:
         "DEM": r"$\mathrm{DEM}$",
         "IMD": r"$\mathrm{IMD}$",
         "TOPEX": r"$\mathrm{TOPEX}$",
-        "COASTDIST": r"$\mathrm{DCOAST}$",
+        "DCOAST": r"$\mathrm{DCOAST}$",
         "LCZ": r"$\mathrm{LCZ}$",
         "UD": r"$\mathrm{UD}$",
         "timestamp": r"$\mathrm{Timestamp}$",
@@ -133,7 +133,7 @@ class DataVars:
                 "DEM",
                 "IMD",
                 "TOPEX",
-                "COASTDIST",
+                "DCOAST",
                 "LCZ",
                 "UD",
             ]
