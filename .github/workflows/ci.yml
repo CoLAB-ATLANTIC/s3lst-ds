@@ -48,7 +48,7 @@ jobs:
 
       # Create venv
       - name: Create virtual environment with uv
-        run: uv sync --all-groups --all-extras --locked --no-build-package pyproj
+        run: uv sync --all-groups --all-extras --locked
 
       # Linting
       - name: Run lint check with ruff
