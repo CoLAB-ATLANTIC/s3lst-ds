@@ -45,10 +45,12 @@ jobs:
       # (https://github.com/marketplace/actions/astral-sh-setup-uv#python-version)
       - name: Install uv in the runner workspace and add it to PATH
         uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: "3.13"
 
       # Create venv
       - name: Create virtual environment with uv
-        run: uv sync --all-groups --all-extras --locked --no-build-package pyproj
+        run: uv sync --all-groups --all-extras --locked
 
       # Linting
       - name: Run lint check with ruff
