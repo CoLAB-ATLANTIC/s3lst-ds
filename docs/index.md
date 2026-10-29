@@ -49,9 +49,8 @@ data using either single or multi-timestamp scale-invariance-based models.
 
 Below, and as an example, one may observe the original and downscaled LST maps for the
 functional administrative area of Lisbon in the morning of the $3^{\mathrm{rd}}$ of July
-of 2026 during a [heatwave
-event](https://www.euronews.com/2026/06/29/ipma-warns-of-temperatures-above-40c-and-tropical-nights-this-week)
--
+of 2026 during a
+[heatwave event](https://www.euronews.com/2026/06/29/ipma-warns-of-temperatures-above-40c-and-tropical-nights-this-week) -
 these have been obtained with the present package.
 
 <iframe
