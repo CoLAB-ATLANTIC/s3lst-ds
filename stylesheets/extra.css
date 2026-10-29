@@ -1,0 +1,5 @@
+/* Set maximum output height for Jupyter notebooks */
+.jp-OutputArea-output {
+    max-height: 400px;
+    overflow-y: auto;
+}
