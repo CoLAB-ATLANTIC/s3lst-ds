@@ -55,15 +55,9 @@ of 2026 during a
 [heatwave event](https://www.euronews.com/2026/06/29/ipma-warns-of-temperatures-above-40c-and-tropical-nights-this-week) -
 these have been obtained with the present package.
 
-<iframe
-    src="maps/Lisbon_2026_07_03_10_38_52.html"
-    title="Raster comparison"
-    height="500"
-    frameborder="0"
-    width="100%"
-    scrolling="no"
-    loading="eager">
-</iframe>
+<p>
+    <img src="https://github.com/CoLAB-ATLANTIC/s3lst-ds/blob/main/docs/images/lisbon_split_map.png?raw=true" width="700" />
+</p>
 
 ## Requirements
 
