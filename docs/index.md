@@ -54,7 +54,7 @@ of 2026 during a
 these have been obtained with the present package.
 
 <iframe
-    src="maps/lisbon_2026_07_03_10_38_52.html"
+    src="templates/lisbon_2026_07_03_10_38_52.html"
     title="Raster comparison"
     height="500"
     frameborder="0"
